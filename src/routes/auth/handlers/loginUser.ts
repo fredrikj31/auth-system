@@ -1,7 +1,6 @@
 import { CommonQueryMethods } from "slonik";
 import { loginUser } from "../../../services/database/queries/loginUser";
 import { signJwt } from "../../../helpers/signJwt";
-import { BadRequestError } from "../../../errors/client";
 
 interface LoginUserHandlerOptions {
   database: CommonQueryMethods;
