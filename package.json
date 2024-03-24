@@ -9,7 +9,7 @@
     "start": "node build/index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint",
-    "format": "prettier --write"
+    "format": "prettier --check src/**/*"
   },
   "keywords": [],
   "author": "",
