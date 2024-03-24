@@ -6,7 +6,7 @@ services:
     image: "postgres:16-alpine"
     restart: always
     environment:
-      POSTGRES_USER: ${DB_USER}
+      POSTGRES_USER: ${DB_USERNAME}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: auth-system
     ports:
