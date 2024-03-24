@@ -20,10 +20,7 @@ interface DatabasePluginOptions {
   dbName: string;
 }
 
-const database = async (
-  fastify: FastifyInstance,
-  opts: DatabasePluginOptions
-) => {
+const database = async (fastify: FastifyInstance, opts: DatabasePluginOptions) => {
   try {
     const pool = await createPool(
       `postgresql://${opts.dbUsername}:${opts.dbPassword}@${opts.dbHost}:${opts.dbPort}/${opts.dbName}`,
@@ -40,7 +37,7 @@ const database = async (
           createNumericTypeParser(),
           customTimestampParser,
         ],
-      }
+      },
     );
     fastify.decorate("database", pool);
   } catch (error) {

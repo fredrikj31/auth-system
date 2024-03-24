@@ -15,6 +15,6 @@ export const signJwt = ({ userId, username }: SignJwtOptions) => {
     config.jwtPrivateKey,
     {
       expiresIn: "24h",
-    }
+    },
   );
 };
