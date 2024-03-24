@@ -1,8 +1,4 @@
-import {
-  CommonQueryMethods,
-  NotFoundError as SlonikNotFoundError,
-  sql,
-} from "slonik";
+import { CommonQueryMethods, NotFoundError as SlonikNotFoundError, sql } from "slonik";
 import { generateHash } from "../../../helpers/generateHash";
 import { User, UserSchema } from "../../../types/schemas";
 import { config } from "../../../config";
@@ -17,7 +13,7 @@ interface LoginUserOptions {
 
 export const loginUser = async (
   database: CommonQueryMethods,
-  { username, password }: LoginUserOptions
+  { username, password }: LoginUserOptions,
 ): Promise<User> => {
   const user = await database
     .one(
@@ -28,7 +24,7 @@ export const loginUser = async (
         users
       WHERE
         username = ${username};
-    `
+    `,
     )
     .catch((error) => {
       if (error instanceof SlonikNotFoundError) {
@@ -42,8 +38,7 @@ export const loginUser = async (
       logger.error({ username, error }, "Error while logging user in");
       throw new InternalServerError({
         code: "error-getting-user-with-credentials",
-        message:
-          "Unknown error occurred when trying to get user with provided credentials",
+        message: "Unknown error occurred when trying to get user with provided credentials",
       });
     });
 
@@ -54,10 +49,7 @@ export const loginUser = async (
   });
 
   if (hashedPassword !== user.password) {
-    logger.info(
-      { username },
-      "The provided password didn't match hashed password in database"
-    );
+    logger.info({ username }, "The provided password didn't match hashed password in database");
     throw new BadRequestError({
       code: "incorrect-password",
       message: "The provided password was incorrect",
