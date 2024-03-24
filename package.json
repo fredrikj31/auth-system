@@ -1,0 +1,41 @@
+{
+  "name": "auth-system",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "tsx watch src/app.ts | pino-pretty",
+    "build": "tsc -p tsconfig.json",
+    "start": "node build/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint",
+    "format": "prettier --write"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@fastify/swagger": "^8.13.0",
+    "@fastify/swagger-ui": "^2.0.1",
+    "dotenv": "^16.3.1",
+    "fastify": "^4.25.2",
+    "fastify-plugin": "^4.5.1",
+    "fastify-type-provider-zod": "^1.1.9",
+    "jsonwebtoken": "^9.0.2",
+    "pino": "^8.19.0",
+    "pino-pretty": "^10.3.1",
+    "slonik": "^37.2.0",
+    "slonik-interceptor-field-name-transformation": "^1.6.5",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@types/jsonwebtoken": "^9.0.6",
+    "@types/node": "^20.10.5",
+    "@typescript-eslint/eslint-plugin": "^7.3.1",
+    "@typescript-eslint/parser": "^7.3.1",
+    "eslint": "^8.57.0",
+    "prettier": "^3.2.5",
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.3"
+  }
+}
