@@ -26,6 +26,13 @@ export const swaggerConfig: FastifyDynamicSwaggerOptions = {
     schemes: ["http"],
     consumes: ["application/json"],
     produces: ["application/json"],
+    securityDefinitions: {
+      jwt: {
+        type: "apiKey",
+        name: "Authorization",
+        in: "header",
+      },
+    },
   },
   transform: jsonSchemaTransform,
 };
