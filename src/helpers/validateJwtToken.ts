@@ -1,14 +1,13 @@
-import jwt, { TokenExpiredError, JwtPayload } from "jsonwebtoken";
+import jwt, { TokenExpiredError, JsonWebTokenError, JwtPayload } from "jsonwebtoken";
 import { config } from "../config";
-import { BadRequestError } from "../errors/client";
+import { UnauthorizedError } from "../errors/client";
 import { logger } from "../logging";
-import { InternalServerError } from "../errors/server";
 
 interface ValidateJwtOptions {
   token: string;
 }
 
-export const validateJwt = async ({ token }: ValidateJwtOptions): Promise<JwtPayload> => {
+export const validateJwtToken = async ({ token }: ValidateJwtOptions): Promise<JwtPayload> => {
   try {
     const jwtPayload = jwt.verify(token, config.jwtPrivateKey);
     if (typeof jwtPayload === "string") {
@@ -17,14 +16,21 @@ export const validateJwt = async ({ token }: ValidateJwtOptions): Promise<JwtPay
     return jwtPayload;
   } catch (error) {
     if (error instanceof TokenExpiredError) {
-      throw new BadRequestError({
+      throw new UnauthorizedError({
         code: "token-expired",
         message: "The provided token has expired",
       });
     }
 
+    if (error instanceof JsonWebTokenError && error.message === "invalid token") {
+      throw new UnauthorizedError({
+        code: "invalid-token",
+        message: "The provided token is invalid",
+      });
+    }
+
     logger.error({ error }, "Failed to validate jwt token");
-    throw new InternalServerError({
+    throw new UnauthorizedError({
       code: "unknown-error-validating-token",
       message: "Unknown error while trying to validate JWT token",
     });
