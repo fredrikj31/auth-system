@@ -2,12 +2,14 @@ import { FastifyPluginAsync } from "fastify";
 import { validatorCompiler, serializerCompiler, ZodTypeProvider } from "fastify-type-provider-zod";
 import { z } from "zod";
 import { authRoutes } from "./auth";
+import { usersRoutes } from "./users";
 
 export const routes: FastifyPluginAsync = async (instance) => {
   instance.setValidatorCompiler(validatorCompiler);
   instance.setSerializerCompiler(serializerCompiler);
 
   instance.register(authRoutes);
+  instance.register(usersRoutes, { prefix: "/users" });
 
   const app = instance.withTypeProvider<ZodTypeProvider>();
 

@@ -1,6 +1,6 @@
 import { CommonQueryMethods } from "slonik";
 import { BadRequestError } from "../../../errors/client";
-import { validateJwt } from "../../../helpers/validateJwt";
+import { validateJwtToken } from "../../../helpers/validateJwtToken";
 import { checkRefreshToken } from "../../../services/database/queries/checkRefreshToken";
 import { signJwt } from "../../../helpers/signJwt";
 import { getUserById } from "../../../services/database/queries/getUserById";
@@ -12,7 +12,7 @@ interface RefreshTokenHandlerOptions {
 
 export const refreshTokenHandler = async ({ database, refreshToken }: RefreshTokenHandlerOptions): Promise<string> => {
   // Validate refresh token
-  const refreshTokenPayload = await validateJwt({ token: refreshToken });
+  const refreshTokenPayload = await validateJwtToken({ token: refreshToken });
 
   const refreshTokenId = refreshTokenPayload.jti;
   if (!refreshTokenId) {

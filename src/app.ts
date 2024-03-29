@@ -56,3 +56,11 @@ process.on("SIGTERM", () => {
   app.log.warn(`SIGTERM signal detected, terminating service`);
   app.close();
 });
+
+declare module "fastify" {
+  interface FastifyRequest {
+    user?: {
+      id: string;
+    };
+  }
+}
