@@ -4,6 +4,7 @@ import { UserSchema } from "../../types/schemas";
 import { z } from "zod";
 import { loginUserHandler } from "./handlers/loginUser";
 import { signupUserHandler } from "./handlers/signupUser";
+import { refreshTokenHandler } from "./handlers/refreshToken";
 
 export const authRoutes: FastifyPluginAsync = async (instance) => {
   const app = instance.withTypeProvider<ZodTypeProvider>();
@@ -48,21 +49,44 @@ export const authRoutes: FastifyPluginAsync = async (instance) => {
           }),
           "200": z.object({
             accessToken: z.string(),
+            refreshToken: z.string(),
           }),
         },
       },
     },
     async (req, res) => {
-      const result = await loginUserHandler({ database, ...req.body });
+      const { accessToken, refreshToken } = await loginUserHandler({ database, ...req.body });
 
-      if (!result) {
-        return res.status(401).send({
-          code: "Unauthorized",
-          message: "The credentials provided was incorrect.",
-        });
-      }
+      return res.status(200).send({ accessToken, refreshToken });
+    },
+  );
 
-      return res.status(200).send({ accessToken: result });
+  app.post(
+    "/token",
+    {
+      schema: {
+        summary: "Refresh access token",
+        descriptions: "Uses the refresh token to get a new access token",
+        tags: ["actions"],
+        body: z.object({
+          refreshToken: z.string(),
+        }),
+        response: {
+          "401": z.object({
+            code: z.string(),
+            message: z.string(),
+          }),
+          "200": z.object({
+            accessToken: z.string(),
+          }),
+        },
+      },
+    },
+    async (req, res) => {
+      const { refreshToken } = req.body;
+
+      const newAccessToken = await refreshTokenHandler({ database, refreshToken });
+      return res.status(200).send({ accessToken: newAccessToken });
     },
   );
 };
