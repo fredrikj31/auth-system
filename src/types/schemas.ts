@@ -9,3 +9,10 @@ export const UserSchema = z.object({
   birthDate: z.string(),
 });
 export type User = z.infer<typeof UserSchema>;
+
+export const RefreshTokenSchema = z.object({
+  id: z.string(),
+  userId: z.string(),
+  expiresAt: z.string().datetime(),
+});
+export type RefreshToken = z.infer<typeof RefreshTokenSchema>;

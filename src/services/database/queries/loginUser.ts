@@ -4,7 +4,7 @@ import { User, UserSchema } from "../../../types/schemas";
 import { config } from "../../../config";
 import { logger } from "../../../logging";
 import { InternalServerError } from "../../../errors/server";
-import { BadRequestError, NotFoundError } from "../../../errors/client";
+import { NotFoundError, UnauthorizedError } from "../../../errors/client";
 
 interface LoginUserOptions {
   username: string;
@@ -50,7 +50,7 @@ export const loginUser = async (
 
   if (hashedPassword !== user.password) {
     logger.info({ username }, "The provided password didn't match hashed password in database");
-    throw new BadRequestError({
+    throw new UnauthorizedError({
       code: "incorrect-password",
       message: "The provided password was incorrect",
     });
