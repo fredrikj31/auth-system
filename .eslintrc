@@ -1,21 +1,8 @@
 {
-  "env": {
-    "browser": true,
-    "es2021": true,
-  },
-  "extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended", "plugin:prettier/recommended"],
+  "ignorePatterns": ["api/**", "app/**", "packages/**"],
+  "extends": ["@auth-system/eslint-config/library.js"],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
-    "ecmaVersion": "latest",
-    "sourceType": "module",
-  },
-  "plugins": ["@typescript-eslint"],
-  "rules": {},
-  "settings": {
-    "import/resolver": {
-      "node": {
-        "extensions": [".js", ".ts", ".d.ts"],
-      },
-    },
-  },
+    "project": true
+  }
 }
