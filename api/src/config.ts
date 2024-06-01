@@ -1,5 +1,8 @@
-import "dotenv/config";
-import z from "zod";
+import { config as dotEnvConfig } from "dotenv";
+import { z } from "zod";
+
+// Load .env file from root
+dotEnvConfig({ path: "../.env" });
 
 const envVarsSchema = z.object({
   JWT_PRIVATE_KEY: z.string(),
