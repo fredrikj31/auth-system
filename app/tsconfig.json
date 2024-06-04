@@ -1,0 +1,4 @@
+{
+  "extends": ["@auth-system/typescript-config/app-tsconfig.json"],
+  "include": ["./src"]
+}
