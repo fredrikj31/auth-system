@@ -6,13 +6,7 @@
     "plugin:@typescript-eslint/recommended",
     "plugin:react-hooks/recommended"
   ],
-  "ignorePatterns": ["dist", ".eslintrc"],
+  "ignorePatterns": ["dist", ".eslintrc", "postcss.config.js", "tailwind.config.js"],
   "parser": "@typescript-eslint/parser",
-  "plugins": ["react-refresh"],
-  "rules": {
-    "react-refresh/only-export-components": [
-      "warn",
-      { "allowConstantExport": true }
-    ]
-  }
+  "plugins": ["react-refresh"]
 }
