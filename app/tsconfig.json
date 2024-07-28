@@ -1,4 +1,9 @@
 {
   "extends": ["@auth-system/typescript-config/app-tsconfig.json"],
-  "include": ["./src"]
+  "include": ["./src"],
+  "compilerOptions": {
+    "paths": {
+      "@shadcn-ui/*": ["./src/shadcn-ui/*"]
+    }
+  }
 }
