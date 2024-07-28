@@ -2,6 +2,7 @@ import { Button } from "@shadcn-ui/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@shadcn-ui/components/ui/card";
 import { Input } from "@shadcn-ui/components/ui/input";
 import { Label } from "@shadcn-ui/components/ui/label";
+import { Link } from "react-router-dom";
 
 export const LoginPage = () => {
   return (
@@ -21,8 +22,14 @@ export const LoginPage = () => {
             <Input id="password" type="password" required />
           </div>
         </CardContent>
-        <CardFooter>
+        <CardFooter className="flex flex-col">
           <Button className="w-full">Sign in</Button>
+          <div className="mt-4 text-center text-sm">
+            Doesn't have an account?{" "}
+            <Link to={"/signup"} className="underline">
+              Sign up
+            </Link>
+          </div>
         </CardFooter>
       </Card>
     </div>
