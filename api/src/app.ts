@@ -7,6 +7,7 @@ import { databasePlugin } from "./services/database/client";
 import { config } from "./config";
 import { logger } from "./logging";
 import { BaseError } from "./errors";
+import fastifyCors from "@fastify/cors";
 
 const app: FastifyInstance = Fastify({
   logger: true,
@@ -15,6 +16,12 @@ const app: FastifyInstance = Fastify({
 app
   .register(fastifySwagger, swaggerConfig)
   .register(fastifySwaggerUi, swaggerUiConfig)
+  .register(fastifyCors, {
+    origin: config.website.baseUrl,
+    methods: ["GET", "POST"],
+    maxAge: 86400,
+    credentials: true,
+  })
   .register(databasePlugin, {
     dbHost: config.database.host,
     dbPort: config.database.port,
