@@ -5,6 +5,7 @@ import { z } from "zod";
 dotEnvConfig({ path: "../.env" });
 
 const envVarsSchema = z.object({
+  WEBSITE_BASE_URL: z.string(),
   JWT_PRIVATE_KEY: z.string(),
   PASSWORD_SALT: z.string(),
   DB_HOST: z.string(),
@@ -22,6 +23,9 @@ if (!envVars.success) {
 }
 
 export const config = {
+  website: {
+    baseUrl: envVars.data.WEBSITE_BASE_URL,
+  },
   jwtPrivateKey: envVars.data.JWT_PRIVATE_KEY,
   passwordSalt: envVars.data.PASSWORD_SALT,
   database: {
