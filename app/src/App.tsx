@@ -3,6 +3,7 @@ import { HomePage } from "./pages/Home.tsx";
 import { LoginPage } from "./pages/Login.tsx";
 import { SignupPage } from "./pages/Signup.tsx";
 import { QueryClient, QueryClientProvider } from "react-query";
+import { Toaster } from "@shadcn-ui/components/ui/toaster.tsx";
 
 const queryClient = new QueryClient();
 
@@ -26,6 +27,7 @@ export const App = () => {
     <>
       <QueryClientProvider client={queryClient}>
         <RouterProvider router={router} />
+        <Toaster />
       </QueryClientProvider>
     </>
   );
