@@ -8,6 +8,7 @@ import { config } from "./config";
 import { logger } from "./logging";
 import { BaseError } from "./errors";
 import fastifyCors from "@fastify/cors";
+import fastifyCookie from "@fastify/cookie";
 
 const app: FastifyInstance = Fastify({
   logger: true,
@@ -21,6 +22,16 @@ app
     methods: ["GET", "POST"],
     maxAge: 86400,
     credentials: true,
+  })
+  .register(fastifyCookie, {
+    secret: config.cookieSecret,
+    algorithm: "sha256",
+    parseOptions: {
+      path: "/",
+      httpOnly: true,
+      signed: true,
+      sameSite: true,
+    },
   })
   .register(databasePlugin, {
     dbHost: config.database.host,
