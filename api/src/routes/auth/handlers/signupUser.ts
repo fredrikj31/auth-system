@@ -32,7 +32,7 @@ export const signupUserHandler = async ({ database, user }: SignupUserHandlerOpt
   const hashedPassword = generateHash({
     password: user.password,
     userSalt,
-    salt: config.passwordSalt,
+    salt: config.tokens.passwordSalt,
   });
 
   const createdUser = await createUser(database, {

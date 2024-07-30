@@ -8,6 +8,7 @@ const envVarsSchema = z.object({
   WEBSITE_BASE_URL: z.string(),
   JWT_PRIVATE_KEY: z.string(),
   PASSWORD_SALT: z.string(),
+  COOKIE_SECRET: z.string(),
   DB_HOST: z.string(),
   DB_PORT: z.string(),
   DB_NAME: z.string(),
@@ -26,13 +27,20 @@ export const config = {
   website: {
     baseUrl: envVars.data.WEBSITE_BASE_URL,
   },
-  jwtPrivateKey: envVars.data.JWT_PRIVATE_KEY,
-  passwordSalt: envVars.data.PASSWORD_SALT,
+  tokens: {
+    jwtPrivateKey: envVars.data.JWT_PRIVATE_KEY,
+    passwordSalt: envVars.data.PASSWORD_SALT,
+    cookieSecret: envVars.data.COOKIE_SECRET,
+  },
   database: {
     host: envVars.data.DB_HOST,
     port: envVars.data.DB_PORT,
     name: envVars.data.DB_NAME,
     username: envVars.data.DB_USERNAME,
     password: envVars.data.DB_PASSWORD,
+  },
+  jwt: {
+    accessTokenTTLSeconds: 60 * 60 * 24, // 24 hours
+    refreshTokenTTLSeconds: 60 * 60 * 24 * 30, // 30 days
   },
 };
