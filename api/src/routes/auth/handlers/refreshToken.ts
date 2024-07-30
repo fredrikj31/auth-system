@@ -4,13 +4,22 @@ import { validateJwtToken } from "../../../helpers/validateJwtToken";
 import { checkRefreshToken } from "../../../services/database/queries/checkRefreshToken";
 import { signJwt } from "../../../helpers/signJwt";
 import { getUserById } from "../../../services/database/queries/getUserById";
+import { config } from "../../../config";
 
 interface RefreshTokenHandlerOptions {
   database: CommonQueryMethods;
   refreshToken: string;
 }
 
-export const refreshTokenHandler = async ({ database, refreshToken }: RefreshTokenHandlerOptions): Promise<string> => {
+interface RefreshTokenHandlerOutput {
+  token: string;
+  expiresAt: string;
+}
+
+export const refreshTokenHandler = async ({
+  database,
+  refreshToken,
+}: RefreshTokenHandlerOptions): Promise<RefreshTokenHandlerOutput> => {
   // Validate refresh token
   const refreshTokenPayload = await validateJwtToken({ token: refreshToken });
 
@@ -35,14 +44,19 @@ export const refreshTokenHandler = async ({ database, refreshToken }: RefreshTok
   // Get user details
   const user = await getUserById(database, { userId: refreshTokenItem.userId });
 
+  const expiresAt = new Date(Date.now() + config.jwt.accessTokenTTLSeconds * 1000).toISOString();
+
   // Sign new access token
   const newAccessToken = signJwt({
     payload: {
       userId: user.id,
       username: user.username,
     },
-    expiresInSeconds: 60 * 60 * 24, // 24 hours
+    expiresInSeconds: config.jwt.accessTokenTTLSeconds,
   });
 
-  return newAccessToken;
+  return {
+    token: newAccessToken,
+    expiresAt,
+  };
 };
