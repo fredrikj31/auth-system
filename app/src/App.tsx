@@ -2,6 +2,10 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import { HomePage } from "./pages/Home.tsx";
 import { LoginPage } from "./pages/Login.tsx";
 import { SignupPage } from "./pages/Signup.tsx";
+import { QueryClient, QueryClientProvider } from "react-query";
+import { Toaster } from "@shadcn-ui/components/ui/toaster.tsx";
+
+const queryClient = new QueryClient();
 
 const router = createBrowserRouter([
   {
@@ -21,7 +25,10 @@ const router = createBrowserRouter([
 export const App = () => {
   return (
     <>
-      <RouterProvider router={router} />
+      <QueryClientProvider client={queryClient}>
+        <RouterProvider router={router} />
+        <Toaster />
+      </QueryClientProvider>
     </>
   );
 };
