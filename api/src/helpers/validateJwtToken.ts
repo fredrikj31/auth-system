@@ -9,7 +9,7 @@ interface ValidateJwtOptions {
 
 export const validateJwtToken = async ({ token }: ValidateJwtOptions): Promise<JwtPayload> => {
   try {
-    const jwtPayload = jwt.verify(token, config.jwtPrivateKey);
+    const jwtPayload = jwt.verify(token, config.tokens.jwtPrivateKey);
     if (typeof jwtPayload === "string") {
       return JSON.parse(jwtPayload) as JwtPayload;
     }

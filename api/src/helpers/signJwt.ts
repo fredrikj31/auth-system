@@ -12,13 +12,13 @@ interface SignJwtOptions {
 export const signJwt = ({ payload, expiresInSeconds, tokenId }: SignJwtOptions): string => {
   try {
     if (tokenId) {
-      return jwt.sign(payload, config.jwtPrivateKey, {
+      return jwt.sign(payload, config.tokens.jwtPrivateKey, {
         expiresIn: expiresInSeconds,
         jwtid: tokenId,
       });
     }
 
-    return jwt.sign(payload, config.jwtPrivateKey, {
+    return jwt.sign(payload, config.tokens.jwtPrivateKey, {
       expiresIn: expiresInSeconds,
     });
   } catch (error) {

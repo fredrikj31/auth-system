@@ -27,9 +27,11 @@ export const config = {
   website: {
     baseUrl: envVars.data.WEBSITE_BASE_URL,
   },
-  jwtPrivateKey: envVars.data.JWT_PRIVATE_KEY,
-  passwordSalt: envVars.data.PASSWORD_SALT,
-  cookieSecret: envVars.data.COOKIE_SECRET,
+  tokens: {
+    jwtPrivateKey: envVars.data.JWT_PRIVATE_KEY,
+    passwordSalt: envVars.data.PASSWORD_SALT,
+    cookieSecret: envVars.data.COOKIE_SECRET,
+  },
   database: {
     host: envVars.data.DB_HOST,
     port: envVars.data.DB_PORT,
