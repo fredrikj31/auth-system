@@ -75,7 +75,7 @@ export const authRoutes: FastifyPluginAsync = async (instance) => {
         descriptions: "Uses the refresh token to get a new access token",
         tags: ["actions"],
         response: {
-          "401": z.object({
+          "400": z.object({
             code: z.string(),
             message: z.string(),
           }),
