@@ -24,12 +24,8 @@ app
     credentials: true,
   })
   .register(fastifyCookie, {
-    secret: config.tokens.cookieSecret,
-    algorithm: "sha256",
     parseOptions: {
       path: "/",
-      httpOnly: true,
-      signed: true,
       sameSite: true,
     },
   })
