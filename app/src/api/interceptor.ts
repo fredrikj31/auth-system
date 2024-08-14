@@ -46,7 +46,7 @@ export const authInterceptor = async (axiosConfig: InternalAxiosRequestConfig) =
   }
 
   if (accessTokenCookie) {
-    axiosConfig.headers.set("Authorization", accessTokenCookie);
+    axiosConfig.headers.set("Authorization", `Bearer ${accessTokenCookie}`);
   }
 
   return axiosConfig;
