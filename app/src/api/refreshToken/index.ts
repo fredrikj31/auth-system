@@ -1,10 +1,14 @@
 import { AxiosError } from "axios";
+import Cookies from "js-cookie";
 import { apiClient } from "../client";
 import { ApiError } from "../errors";
 
 export const refreshToken = async (): Promise<void> => {
+  const refreshToken = Cookies.get("refresh_token");
   try {
-    await apiClient.post("/token");
+    await apiClient.post("/token", {
+      refreshToken,
+    });
   } catch (error) {
     if (error instanceof AxiosError) {
       if (error.response?.status === 400) {
