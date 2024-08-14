@@ -5,7 +5,7 @@ import { z } from "zod";
 import { loginUserHandler } from "./handlers/loginUser";
 import { signupUserHandler } from "./handlers/signupUser";
 import { refreshTokenHandler } from "./handlers/refreshToken";
-import { BadRequestError, NotFoundError } from "../../errors/client";
+import { NotFoundError } from "../../errors/client";
 import { logoutUserHandler } from "./handlers/logoutUser";
 
 export const authRoutes: FastifyPluginAsync = async (instance) => {
@@ -109,6 +109,9 @@ export const authRoutes: FastifyPluginAsync = async (instance) => {
         summary: "Refresh access token",
         descriptions: "Uses the refresh token to get a new access token",
         tags: ["actions"],
+        body: z.object({
+          refreshToken: z.string(),
+        }),
         response: {
           "400": z.object({
             code: z.string(),
@@ -119,15 +122,8 @@ export const authRoutes: FastifyPluginAsync = async (instance) => {
       },
     },
     async (req, res) => {
-      // Get refresh token from cookies
-      const refreshToken = req.cookies["refresh_token"];
-      if (!refreshToken) {
-        throw new BadRequestError({
-          code: "refresh-token-cookie-not-found",
-          message: "Could not find refresh token cookie in the headers",
-        });
-      }
-
+      // Get refresh token from body
+      const refreshToken = req.body.refreshToken;
       const { token, expiresAt } = await refreshTokenHandler({ database, refreshToken });
 
       // Sets new access token in the cookies
