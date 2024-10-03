@@ -1,0 +1,7 @@
+.turbo
+.husky
+.vscode
+node_modules
+database
+http
+packages

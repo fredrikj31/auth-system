@@ -2,9 +2,10 @@
   "name": "@auth-system/app",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
-    "lint": "eslint . --max-warnings 0",
-    "preview": "vite preview"
+    "start": "vite preview",
+    "build": "vite build",
+    "tsc": "tsc --noEmit",
+    "lint": "eslint . --max-warnings 0"
   },
   "dependencies": {
     "@radix-ui/react-label": "^2.1.0",
