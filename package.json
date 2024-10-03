@@ -4,6 +4,7 @@
   "scripts": {
     "build": "turbo build",
     "dev": "turbo dev",
+    "tsc": "turbo tsc",
     "lint": "turbo lint",
     "format": "prettier . --check",
     "prepare": "husky"
