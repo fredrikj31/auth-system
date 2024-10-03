@@ -2,8 +2,9 @@
   "name": "@auth-system/api",
   "scripts": {
     "dev": "tsx watch src/app.ts | pino-pretty",
-    "build": "tsc --noEmit",
-    "start": "node build/index.js",
+    "start": "node build/app.js",
+    "build": "tsc",
+    "tsc": "tsc --noEmit",
     "lint": "eslint . --max-warnings 0"
   },
   "dependencies": {
