@@ -34,7 +34,8 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
-          context: ./${{ matrix.projects.path }}/Dockerfile
+          context: ./${{ matrix.projects.path }}
+          file: ./${{ matrix.projects.path }}/Dockerfile
           push: true
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/auth-system-${{ matrix.projects.project }}:${{ github.ref_name }}
