@@ -5,6 +5,9 @@ import { defineConfig } from "vite";
 export default defineConfig({
   envDir: "../",
   plugins: [react()],
+  build: {
+    outDir: "build",
+  },
   resolve: {
     alias: {
       "@shadcn-ui": path.resolve(__dirname, "./src/shadcn-ui"),
