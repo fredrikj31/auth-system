@@ -13,9 +13,7 @@ jobs:
       matrix:
         projects:
           - project: frontend
-            path: app
           - project: backend
-            path: api
 
     runs-on: ubuntu-latest
     steps:
@@ -34,8 +32,8 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
-          context: ./${{ matrix.projects.path }}
-          file: ./${{ matrix.projects.path }}/Dockerfile
+          context: .
+          file: ./Dockerfile.${{ matrix.projects.project }}
           push: true
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/auth-system-${{ matrix.projects.project }}:${{ github.ref_name }}
