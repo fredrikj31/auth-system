@@ -8,9 +8,9 @@ import {
   createPool,
   Interceptor,
   QueryResultRow,
-  TypeParser,
 } from "slonik";
 import { createFieldNameTransformationInterceptor } from "slonik-interceptor-field-name-transformation";
+import { logger } from "../../logging";
 
 interface DatabasePluginOptions {
   dbUsername: string;
@@ -40,7 +40,8 @@ const database = async (fastify: FastifyInstance, opts: DatabasePluginOptions) =
       },
     );
     fastify.decorate("database", pool);
-  } catch (error) {
+  } catch (error: unknown) {
+    logger.fatal(error, "Unable to connect to database");
     throw new Error("Unable to connect to database!");
   }
 };
@@ -52,7 +53,7 @@ declare module "fastify" {
   }
 }
 
-const customTimestampParser: TypeParser<string> = {
+const customTimestampParser: { name: string; parse: (s: string) => string } = {
   name: "timestamp",
   parse: (s) => {
     return new Date(Date.parse(s + " UTC")).toISOString();
