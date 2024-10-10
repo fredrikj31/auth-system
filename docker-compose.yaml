@@ -29,6 +29,7 @@ services:
       DB_PASSWORD: ${DB_PASSWORD}
     networks:
       - auth-system-network
+      - cloudflared_tunnel
     ports:
       - 2001:3000
 
@@ -38,12 +39,16 @@ services:
     restart: always
     environment:
       VITE_API_BASE_URL: ${VITE_API_BASE_URL}
+    networks:
+      - cloudflared_tunnel
     ports:
       - 2002:5173
 
 networks:
   auth-system-network:
     driver: bridge
+  cloudflared_tunnel:
+    external: true
 
 volumes:
   database-data:
