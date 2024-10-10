@@ -8,6 +8,9 @@ export default defineConfig({
   build: {
     outDir: "build",
   },
+  server: {
+    host: "0.0.0.0",
+  },
   resolve: {
     alias: {
       "@shadcn-ui": path.resolve(__dirname, "./src/shadcn-ui"),
