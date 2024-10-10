@@ -1,17 +1,49 @@
 services:
   database:
     container_name: auth-system-database
-    image: "postgres:16-alpine"
+    image: postgres:17-alpine
     restart: always
     environment:
       POSTGRES_USER: ${DB_USERNAME}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: auth-system
-    ports:
-      - 5432:5432
+    networks:
+      - auth-system-network
     volumes:
       - database-data:/var/lib/postgresql/data # store data from postgresql in the volume
       - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql # init database with SQL files from local "database" folder
+
+  backend:
+    container_name: auth-system-backend
+    image: fredrikj31/auth-system-backend:latest
+    restart: always
+    environment:
+      WEBSITE_BASE_URL: ${WEBSITE_BASE_URL}
+      JWT_PRIVATE_KEY: ${JWT_PRIVATE_KEY}
+      PASSWORD_SALT: ${PASSWORD_SALT}
+      COOKIE_SECRET: ${COOKIE_SECRET}
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      DB_NAME: ${DB_NAME}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+    networks:
+      - auth-system-network
+    ports:
+      - 2001:3000
+
+  frontend:
+    container_name: auth-system-frontend
+    image: fredrikj31/auth-system-frontend:latest
+    restart: always
+    environment:
+      VITE_API_BASE_URL: ${VITE_API_BASE_URL}
+    ports:
+      - 2002:5173
+
+networks:
+  auth-system-network:
+    driver: bridge
 
 volumes:
   database-data:
