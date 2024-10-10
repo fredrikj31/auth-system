@@ -9,11 +9,10 @@ WORKDIR /app
 COPY . /usr/src/app
 WORKDIR /usr/src/app
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
-RUN pnpm run -r build
-RUN pnpm deploy --filter=app --prod /app
+RUN pnpm deploy --filter=app /app
 
 FROM base AS app
-COPY --from=build /app/build /app
+COPY --from=build /app /app
 WORKDIR /app
-EXPOSE 8000
-CMD [ "pnpm", "dlx", "serve", "-l", "8000" ]
+EXPOSE 5173
+CMD ["pnpm", "run", "dev"]
