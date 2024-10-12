@@ -42,7 +42,7 @@ services:
     networks:
       - cloudflared_tunnel
     ports:
-      - 2002:5173
+      - 2002:80
 
 networks:
   auth-system-network:
