@@ -1,0 +1,17 @@
+meta {
+  name: Token
+  type: http
+  seq: 4
+}
+
+post {
+  url: http://localhost:3000/token
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "refreshToken": "{{refresh_token}}"
+  }
+}

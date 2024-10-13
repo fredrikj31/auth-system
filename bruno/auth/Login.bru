@@ -1,0 +1,29 @@
+meta {
+  name: Login
+  type: http
+  seq: 2
+}
+
+post {
+  url: http://localhost:3000/login
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "username": "JohnDoe",
+    "password": "Password123"
+  }
+}
+
+script:post-response {
+  const cookies = res.getHeader("set-cookie");
+  const accessTokenCookie = cookies.find((cookie) => cookie.includes("access_token"));
+  const refreshTokenCookie = cookies.find((cookie) => cookie.includes("refresh_token"));
+  const accessToken = accessTokenCookie.match(/access_token=([^;]+)/)[1];
+  const refreshToken = refreshTokenCookie.match(/refresh_token=([^;]+)/)[1];
+  
+  bru.setEnvVar("access_token", accessToken);
+  bru.setEnvVar("refresh_token", refreshToken);
+}
