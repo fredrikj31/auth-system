@@ -9,8 +9,9 @@ FROM base AS build
 COPY . /usr/src/app
 WORKDIR /usr/src/app
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile --filter=app
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm deploy --filter=app --prod /app --ignore-scripts
-RUN pnpm run build --filter=@auth-system/app
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm deploy --filter=app /app --ignore-scripts
+WORKDIR /app
+RUN pnpm run build
 
 FROM nginx:1.27.2-alpine AS app
 COPY --from=build /app/build /usr/share/nginx/html

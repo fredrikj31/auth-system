@@ -8,8 +8,9 @@ FROM base AS build
 COPY . /usr/src/app
 WORKDIR /usr/src/app
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile --filter=api
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm deploy --filter=api --prod /app --ignore-scripts
-RUN pnpm run build --filter=@auth-system/api
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm deploy --filter=api /app --ignore-scripts
+WORKDIR /app
+RUN pnpm run build
 
 FROM base AS app
 COPY --from=build /app/build /app/build
