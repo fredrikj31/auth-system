@@ -6,12 +6,11 @@ RUN corepack enable
 
 FROM base AS build
 
-WORKDIR /app
 COPY . /usr/src/app
 WORKDIR /usr/src/app
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
-RUN pnpm run -r build
-RUN pnpm deploy --filter=app --prod /app
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile --filter=app
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm deploy --filter=app --prod /app --ignore-scripts
+RUN pnpm run build --filter=@auth-system/app
 
 FROM nginx:1.27.2-alpine AS app
 COPY --from=build /app/build /usr/share/nginx/html
