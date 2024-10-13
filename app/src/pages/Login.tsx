@@ -2,48 +2,31 @@ import { Button } from "@shadcn-ui/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@shadcn-ui/components/ui/card";
 import { Input } from "@shadcn-ui/components/ui/input";
 import { Label } from "@shadcn-ui/components/ui/label";
-import { Link, useNavigate } from "react-router-dom";
-import { useLoginUser } from "../api/loginUser/useLoginUser";
+import { Link } from "react-router-dom";
 import { useState } from "react";
 import { useToast } from "@shadcn-ui/components/ui/use-toast";
+import { useAuth } from "../providers/auth";
 
 export const LoginPage = () => {
+  const { toast } = useToast();
+  const auth = useAuth();
+
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
-  const { toast } = useToast();
-  const navigate = useNavigate();
-  const { mutate: loginUser } = useLoginUser();
-
   const login = () => {
-    loginUser(
-      { username, password },
-      {
-        onSuccess: () => {
-          toast({
-            title: "Login successfully!",
-            duration: 2000,
-          });
-          navigate("/");
-        },
-        onError: (error) => {
-          if (error.statusCode === 404) {
-            toast({
-              title: "User not found.",
-              description: "A user with that username was not found.",
-              duration: 5000,
-            });
-          } else {
-            toast({
-              variant: "destructive",
-              title: "Unknown Error",
-              description: "Unknown error while trying to login in, please contact an admin.",
-              duration: 5000,
-            });
-          }
-        },
-      },
-    );
+    if (!username || !password) {
+      toast({
+        title: "Empty fields!",
+        description: "Please fill out all the fields.",
+      });
+      return;
+    }
+
+    auth.login({
+      username,
+      password,
+    });
   };
 
   return (

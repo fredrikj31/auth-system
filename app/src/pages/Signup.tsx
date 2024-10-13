@@ -2,65 +2,40 @@ import { Label } from "@radix-ui/react-label";
 import { Button } from "@shadcn-ui/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@shadcn-ui/components/ui/card";
 import { Input } from "@shadcn-ui/components/ui/input";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Popover, PopoverContent, PopoverTrigger } from "@shadcn-ui/components/ui/popover";
 import { cn } from "@shadcn-ui/lib/utils";
 import { CalendarIcon } from "lucide-react";
 import { Calendar } from "@shadcn-ui/components/ui/calendar";
 import { useState } from "react";
 import { format } from "date-fns";
-import { useSignupUser } from "../api/signupUser/useSignupUser";
 import { useToast } from "@shadcn-ui/components/ui/use-toast";
+import { useAuth } from "../providers/auth";
 
 export const SignupPage = () => {
+  const { toast } = useToast();
+  const auth = useAuth();
+
   const [email, setEmail] = useState<string>("");
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [birthDate, setBirthDate] = useState<Date>();
 
-  const { toast } = useToast();
-  const navigate = useNavigate();
-  const { mutate: signupUser } = useSignupUser();
-
   const signup = () => {
-    signupUser(
-      { email, username, password, birthDate: format(birthDate ?? new Date(), "yyyy-MM-dd") },
-      {
-        onSuccess: () => {
-          toast({
-            title: "Signup successfully!",
-            duration: 2000,
-          });
-          navigate("/login");
-        },
-        onError: (error) => {
-          switch (error.statusCode) {
-            case 404:
-              toast({
-                title: "User not found.",
-                description: "A user with that username was not found.",
-                duration: 5000,
-              });
-              break;
-            case 409:
-              toast({
-                title: "Username is taken.",
-                description: "That username is already taken by another user.",
-                duration: 5000,
-              });
-              break;
-            default:
-              toast({
-                variant: "destructive",
-                title: "Unknown Error",
-                description: "Unknown error while trying to sign up, please contact an admin.",
-                duration: 5000,
-              });
-              break;
-          }
-        },
-      },
-    );
+    if (!email || !username || !password || !birthDate) {
+      toast({
+        title: "Fields Empty!",
+        description: "Please fill out all the input fields",
+      });
+      return;
+    }
+
+    auth.signup({
+      email,
+      username,
+      password,
+      birthDate: format(birthDate, "yyyy-MM-dd"),
+    });
   };
 
   return (
@@ -106,7 +81,7 @@ export const SignupPage = () => {
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className="w-auto p-0">
-                    <Calendar mode="single" selected={birthDate} onSelect={setBirthDate} initialFocus />
+                    <Calendar mode="single" selected={birthDate} onSelect={setBirthDate} />
                   </PopoverContent>
                 </Popover>
               </div>
