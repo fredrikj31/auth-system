@@ -1,4 +1,4 @@
-import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { HomePage } from "./pages/Home.tsx";
 import { LoginPage } from "./pages/Login.tsx";
 import { SignupPage } from "./pages/Signup.tsx";
@@ -10,32 +10,26 @@ import { ProtectedRoute } from "./components/ProtectedRoute.tsx";
 
 const queryClient = new QueryClient();
 
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: (
-      <ProtectedRoute redirectPath="/login" accessToken={Cookies.get("access_token")}>
-        <HomePage />
-      </ProtectedRoute>
-    ),
-  },
-  {
-    path: "/login",
-    element: <LoginPage />,
-  },
-  {
-    path: "/signup",
-    element: <SignupPage />,
-  },
-]);
-
 export const App = () => {
   return (
     <>
       <QueryClientProvider client={queryClient}>
         <ReactQueryDevtools client={queryClient} initialIsOpen={false} />
-        <RouterProvider router={router} />
-        <Toaster />
+        <BrowserRouter>
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <ProtectedRoute redirectPath="/login" accessToken={Cookies.get("access_token")}>
+                  <HomePage />
+                </ProtectedRoute>
+              }
+            />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/signup" element={<SignupPage />} />
+          </Routes>
+          <Toaster />
+        </BrowserRouter>
       </QueryClientProvider>
     </>
   );
