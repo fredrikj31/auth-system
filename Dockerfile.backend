@@ -5,12 +5,11 @@ RUN corepack enable
 
 FROM base AS build
 
-WORKDIR /app
 COPY . /usr/src/app
 WORKDIR /usr/src/app
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
-RUN pnpm run -r build
-RUN pnpm deploy --filter=api --prod /app
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile --filter=api
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm deploy --filter=api --prod /app --ignore-scripts
+RUN pnpm run build --filter=@auth-system/api
 
 FROM base AS app
 COPY --from=build /app/build /app/build
