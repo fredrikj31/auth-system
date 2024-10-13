@@ -28,6 +28,7 @@ const isAccessTokenExpired = ({ accessToken, refreshToken }: IsAccessTokenExpire
       return true;
     }
   } catch (error) {
+    console.error("Failed to parse JWT token", error);
     // If we can't validate the JWT access token then clear the cookies
     clearCookies();
     return false;
@@ -40,7 +41,12 @@ export const authInterceptor = async (axiosConfig: InternalAxiosRequestConfig) =
   let accessTokenCookie = cookies.get("access_token");
   const refreshTokenCookie = cookies.get("refresh_token");
 
-  if (isAccessTokenExpired({ accessToken: accessTokenCookie, refreshToken: refreshTokenCookie })) {
+  if (
+    isAccessTokenExpired({
+      accessToken: accessTokenCookie,
+      refreshToken: refreshTokenCookie,
+    })
+  ) {
     await refreshToken();
     accessTokenCookie = cookies.get("access_token");
   }
