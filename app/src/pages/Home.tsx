@@ -2,24 +2,14 @@ import { Button } from "@shadcn-ui/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@shadcn-ui/components/ui/card";
 import { Skeleton } from "@shadcn-ui/components/ui/skeleton";
 import { useGetUser } from "../api/getUser/useGetUser";
-import { useLogoutUser } from "../api/logoutUser/useLogoutUser";
-import cookies from "js-cookie";
-import { useNavigate } from "react-router-dom";
+import { useAuth } from "../providers/auth";
 
 export const HomePage = () => {
-  const navigate = useNavigate();
-
+  const auth = useAuth();
   const { data, isFetching, isError } = useGetUser();
-  const { mutate: logoutUser } = useLogoutUser();
 
   const logout = () => {
-    logoutUser(undefined, {
-      onSuccess: () => {
-        cookies.remove("access_token");
-        cookies.remove("refresh_token");
-        navigate("/login");
-      },
-    });
+    auth.logout();
   };
 
   if (isFetching) {
@@ -52,7 +42,9 @@ export const HomePage = () => {
           </CardHeader>
           <CardContent>Your profile information was not found. Please contact an admin.</CardContent>
           <CardFooter>
-            <Button className="w-full">Logout</Button>
+            <Button className="w-full" onClick={logout}>
+              Logout
+            </Button>
           </CardFooter>
         </Card>
       </div>
