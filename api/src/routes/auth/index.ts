@@ -80,7 +80,7 @@ export const authRoutes: FastifyPluginAsync = async (instance) => {
             code: z.string(),
             message: z.string(),
           }),
-          "200": z.void(),
+          "204": z.object({}),
         },
       },
     },
@@ -98,7 +98,7 @@ export const authRoutes: FastifyPluginAsync = async (instance) => {
       res.clearCookie("access_token");
       res.clearCookie("refresh_token");
 
-      return res.status(200).send();
+      return res.status(204).send({});
     },
   );
 
@@ -117,7 +117,7 @@ export const authRoutes: FastifyPluginAsync = async (instance) => {
             code: z.string(),
             message: z.string(),
           }),
-          "200": z.void(),
+          "204": z.object({}),
         },
       },
     },
@@ -130,7 +130,7 @@ export const authRoutes: FastifyPluginAsync = async (instance) => {
       res.setCookie("access_token", token, {
         expires: new Date(expiresAt),
       });
-      return res.status(200).send();
+      return res.status(204).send({});
     },
   );
 };
