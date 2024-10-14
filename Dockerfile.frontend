@@ -1,7 +1,8 @@
 FROM node:20-alpine AS base
+ARG VITE_API_BASE_URL
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
-ENV VITE_API_BASE_URL="MY_APP_API_BASE_URL"
+ENV VITE_API_BASE_URL=$VITE_API_BASE_URL
 RUN corepack enable
 
 FROM base AS build
@@ -16,6 +17,4 @@ RUN pnpm run build
 FROM nginx:1.27.2-alpine AS app
 COPY --from=build /app/build /usr/share/nginx/html
 COPY nginx/nginx.conf /etc/nginx/conf.d/default.conf
-COPY env.sh /docker-entrypoint.d/env.sh
-RUN chmod +x /docker-entrypoint.d/env.sh
 EXPOSE 80
