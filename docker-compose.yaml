@@ -15,7 +15,10 @@ services:
 
   backend:
     container_name: auth-system-backend
-    image: fredrikj31/auth-system-backend:latest
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    image: auth-system-backend:latest
     restart: always
     environment:
       WEBSITE_BASE_URL: ${WEBSITE_BASE_URL}
@@ -35,10 +38,13 @@ services:
 
   frontend:
     container_name: auth-system-frontend
-    image: fredrikj31/auth-system-frontend:latest
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+      args:
+        VITE_API_BASE_URL: ${VITE_API_BASE_URL}
+    image: auth-system-frontend:latest
     restart: always
-    environment:
-      MY_APP_API_BASE_URL: ${MY_APP_API_BASE_URL}
     networks:
       - cloudflared_tunnel
     ports:
