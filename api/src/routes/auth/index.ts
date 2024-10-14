@@ -75,6 +75,9 @@ export const authRoutes: FastifyPluginAsync = async (instance) => {
         summary: "Logouts a user",
         descriptions: "Logouts a user. Deletes refresh token from database",
         tags: ["actions"],
+        body: z.object({
+          refreshToken: z.string(),
+        }),
         response: {
           "401": z.object({
             code: z.string(),
@@ -87,11 +90,11 @@ export const authRoutes: FastifyPluginAsync = async (instance) => {
       },
     },
     async (req, res) => {
-      const refreshToken = req.cookies["refresh_token"];
+      const refreshToken = req.body.refreshToken;
       if (!refreshToken) {
         throw new NotFoundError({
-          code: "refresh-token-not-found-in-cookies",
-          message: "The refresh token was not found in the request cookies",
+          code: "refresh-token-not-found-in-body",
+          message: "The refresh token was not found in the request body",
         });
       }
       await logoutUserHandler({ database, refreshToken });
