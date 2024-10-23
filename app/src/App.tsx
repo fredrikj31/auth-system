@@ -4,7 +4,6 @@ import { LoginPage } from "./pages/Login.tsx";
 import { SignupPage } from "./pages/Signup.tsx";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import Cookies from "js-cookie";
 import { Toaster } from "@shadcn-ui/components/ui/toaster.tsx";
 import { ProtectedRoute } from "./components/ProtectedRoute.tsx";
 import { AuthProvider } from "./providers/auth.tsx";
@@ -22,7 +21,7 @@ export const App = () => {
               <Route
                 path="/"
                 element={
-                  <ProtectedRoute redirectPath="/login" accessToken={Cookies.get("access_token")}>
+                  <ProtectedRoute redirectPath="/login">
                     <HomePage />
                   </ProtectedRoute>
                 }
