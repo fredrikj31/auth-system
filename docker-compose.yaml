@@ -3,6 +3,9 @@ services:
     container_name: auth-system-database
     image: postgres:17-alpine
     restart: always
+    profiles:
+      - dev
+      - prod
     environment:
       POSTGRES_USER: ${DB_USERNAME}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
@@ -17,6 +20,8 @@ services:
     container_name: auth-system-backend
     image: fredrikj31/auth-system-backend:latest
     restart: always
+    profiles:
+      - prod
     environment:
       WEBSITE_BASE_URL: ${WEBSITE_BASE_URL}
       JWT_PRIVATE_KEY: ${JWT_PRIVATE_KEY}
@@ -37,6 +42,8 @@ services:
     container_name: auth-system-frontend
     image: fredrikj31/auth-system-frontend:latest
     restart: always
+    profiles:
+      - prod
     environment:
       MY_APP_API_BASE_URL: ${MY_APP_API_BASE_URL}
     networks:
