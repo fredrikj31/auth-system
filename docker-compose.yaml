@@ -10,6 +10,8 @@ services:
       POSTGRES_USER: ${DB_USERNAME}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: auth-system
+    ports:
+      - ${DB_PORT}:5432
     networks:
       - auth-system-network
     volumes:
