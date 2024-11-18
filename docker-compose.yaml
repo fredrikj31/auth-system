@@ -9,9 +9,9 @@ services:
     environment:
       POSTGRES_USER: ${DB_USERNAME}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
-      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_DB: auth-system
     ports:
-      - ${DB_PORT}:5432
+      - 2000:5432
     networks:
       - auth-system-network
     volumes:
@@ -29,9 +29,9 @@ services:
       JWT_PRIVATE_KEY: ${JWT_PRIVATE_KEY}
       PASSWORD_SALT: ${PASSWORD_SALT}
       COOKIE_SECRET: ${COOKIE_SECRET}
-      DB_HOST: ${DB_HOST}
-      DB_PORT: ${DB_PORT}
-      DB_NAME: ${DB_NAME}
+      DB_HOST: auth-system-database
+      DB_PORT: 5432 # Must be set to "5432", because the backend and database shares network
+      DB_NAME: auth-system
       DB_USERNAME: ${DB_USERNAME}
       DB_PASSWORD: ${DB_PASSWORD}
     networks:
