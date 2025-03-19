@@ -36,7 +36,6 @@ services:
       DB_PASSWORD: ${DB_PASSWORD}
     networks:
       - auth-system-network
-      - cloudflared_tunnel
     ports:
       - 2001:3000
 
@@ -48,16 +47,12 @@ services:
       - prod
     environment:
       MY_APP_API_BASE_URL: ${MY_APP_API_BASE_URL}
-    networks:
-      - cloudflared_tunnel
     ports:
       - 2002:80
 
 networks:
   auth-system-network:
     driver: bridge
-  cloudflared_tunnel:
-    external: true
 
 volumes:
   database-data:
