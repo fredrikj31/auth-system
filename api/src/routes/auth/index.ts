@@ -17,7 +17,7 @@ export const authRoutes: FastifyPluginAsync = async (instance) => {
     {
       schema: {
         summary: "Signs up a user",
-        description: "Signs a user up, and inserts the details into the database",
+        description: "Signs a user up, and inserts the details into the database.",
         tags: ["actions"],
         body: UserSchema.pick({
           username: true,
@@ -41,7 +41,7 @@ export const authRoutes: FastifyPluginAsync = async (instance) => {
     {
       schema: {
         summary: "Logins a user",
-        descriptions: "Logins a user with the specified credentials. Returns an access and refresh token",
+        descriptions: "Logins a user with the specified credentials. Returns an access and refresh token.",
         tags: ["actions"],
         body: UserSchema.pick({ username: true, password: true }),
         response: {
@@ -73,7 +73,7 @@ export const authRoutes: FastifyPluginAsync = async (instance) => {
     {
       schema: {
         summary: "Logouts a user",
-        descriptions: "Logouts a user. Deletes refresh token from database",
+        descriptions: "Logouts a user. Deletes refresh token from database.",
         tags: ["actions"],
         body: z.object({
           refreshToken: z.string(),
@@ -94,7 +94,7 @@ export const authRoutes: FastifyPluginAsync = async (instance) => {
       if (!refreshToken) {
         throw new NotFoundError({
           code: "refresh-token-not-found-in-body",
-          message: "The refresh token was not found in the request body",
+          message: "The refresh token was not found in the request body.",
         });
       }
       await logoutUserHandler({ database, refreshToken });
@@ -114,7 +114,7 @@ export const authRoutes: FastifyPluginAsync = async (instance) => {
     {
       schema: {
         summary: "Refresh access token",
-        descriptions: "Uses the refresh token to get a new access token",
+        descriptions: "Uses the refresh token to get a new access token.",
         tags: ["actions"],
         body: z.object({
           refreshToken: z.string(),
