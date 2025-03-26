@@ -34,7 +34,7 @@ export const LoginPage = () => {
       <Card className="w-full max-w-sm">
         <CardHeader>
           <CardTitle className="text-2xl">Login</CardTitle>
-          <CardDescription>Enter your username and password below to login to your account</CardDescription>
+          <CardDescription>Enter your username and password below to login to your account.</CardDescription>
         </CardHeader>
         <CardContent className="grid gap-4">
           <div className="grid gap-2">

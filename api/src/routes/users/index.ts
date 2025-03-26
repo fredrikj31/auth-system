@@ -15,7 +15,7 @@ export const usersRoutes: FastifyPluginAsync = async (instance) => {
       onRequest: [validateJwt],
       schema: {
         summary: "Get details about user",
-        description: "Gets detailed information about the user requesting the route",
+        description: "Gets detailed information about the user requesting the route.",
         tags: ["users"],
         security: [
           {
