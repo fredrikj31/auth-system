@@ -2,10 +2,12 @@
   "name": "@auth-system/api",
   "scripts": {
     "dev": "tsx watch src/app.ts | pino-pretty",
-    "start": "node build/app.js",
     "build": "tsc",
-    "tsc": "tsc --noEmit",
-    "lint": "eslint . --max-warnings 0"
+    "build:check": "tsc --noEmit",
+    "start": "node build/app.js",
+    "lint": "eslint . --max-warnings 0",
+    "format:check": "prettier . --check",
+    "format:write": "prettier . --write"
   },
   "dependencies": {
     "@fastify/cookie": "^10.0.1",

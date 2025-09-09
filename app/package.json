@@ -2,10 +2,12 @@
   "name": "@auth-system/app",
   "scripts": {
     "dev": "vite",
+    "build": "tsc && vite build",
+    "build:check": "tsc --noEmit",
     "start": "vite preview",
-    "build": "vite build",
-    "tsc": "tsc --noEmit",
-    "lint": "eslint . --max-warnings 0"
+    "lint": "eslint . --max-warnings 0",
+    "format:check": "prettier . --check",
+    "format:write": "prettier . --write"
   },
   "dependencies": {
     "@radix-ui/react-label": "^2.1.0",
