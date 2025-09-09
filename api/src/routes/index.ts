@@ -1,5 +1,9 @@
 import { FastifyPluginAsync } from "fastify";
-import { validatorCompiler, serializerCompiler, ZodTypeProvider } from "fastify-type-provider-zod";
+import {
+  validatorCompiler,
+  serializerCompiler,
+  ZodTypeProvider,
+} from "fastify-type-provider-zod";
 import { z } from "zod";
 import { authRoutes } from "./auth";
 import { usersRoutes } from "./users";

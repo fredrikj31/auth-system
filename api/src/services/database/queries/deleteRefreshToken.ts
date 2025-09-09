@@ -1,4 +1,8 @@
-import { CommonQueryMethods, sql, NotFoundError as SlonikNotFoundError } from "slonik";
+import {
+  CommonQueryMethods,
+  sql,
+  NotFoundError as SlonikNotFoundError,
+} from "slonik";
 import { RefreshTokenSchema } from "../../../types/schemas";
 import { NotFoundError } from "../../../errors/client";
 import { logger } from "../../../logging";

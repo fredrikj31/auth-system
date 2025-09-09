@@ -1,4 +1,8 @@
-import { CommonQueryMethods, sql, NotFoundError as SlonikNotFoundError } from "slonik";
+import {
+  CommonQueryMethods,
+  sql,
+  NotFoundError as SlonikNotFoundError,
+} from "slonik";
 import { User, UserSchema } from "../../../types/schemas";
 import { logger } from "../../../logging";
 import { InternalServerError } from "../../../errors/server";
@@ -8,7 +12,10 @@ interface GetUserByIdOptions {
   userId: string;
 }
 
-export const getUserById = async (database: CommonQueryMethods, { userId }: GetUserByIdOptions): Promise<User> => {
+export const getUserById = async (
+  database: CommonQueryMethods,
+  { userId }: GetUserByIdOptions,
+): Promise<User> => {
   try {
     return await database.one(sql.type(UserSchema)`
       SELECT

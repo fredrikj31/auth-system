@@ -8,7 +8,10 @@ interface LogoutUserHandlerOptions {
   refreshToken: string;
 }
 
-export const logoutUserHandler = async ({ database, refreshToken }: LogoutUserHandlerOptions): Promise<void> => {
+export const logoutUserHandler = async ({
+  database,
+  refreshToken,
+}: LogoutUserHandlerOptions): Promise<void> => {
   const refreshTokenPayload = await validateJwtToken({ token: refreshToken });
 
   if (!refreshTokenPayload.jti) {
@@ -18,5 +21,7 @@ export const logoutUserHandler = async ({ database, refreshToken }: LogoutUserHa
     });
   }
 
-  await deleteRefreshToken(database, { refreshTokenId: refreshTokenPayload.jti });
+  await deleteRefreshToken(database, {
+    refreshTokenId: refreshTokenPayload.jti,
+  });
 };

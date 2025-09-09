@@ -17,7 +17,10 @@ interface SignupUserHandlerOptions {
   };
 }
 
-export const signupUserHandler = async ({ database, user }: SignupUserHandlerOptions): Promise<User> => {
+export const signupUserHandler = async ({
+  database,
+  user,
+}: SignupUserHandlerOptions): Promise<User> => {
   const isEmailTaken = await doesEmailExist(database, { email: user.email });
 
   if (isEmailTaken) {

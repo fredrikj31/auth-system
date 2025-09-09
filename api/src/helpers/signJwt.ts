@@ -9,7 +9,11 @@ interface SignJwtOptions {
   tokenId?: string;
 }
 
-export const signJwt = ({ payload, expiresInSeconds, tokenId }: SignJwtOptions): string => {
+export const signJwt = ({
+  payload,
+  expiresInSeconds,
+  tokenId,
+}: SignJwtOptions): string => {
   try {
     if (tokenId) {
       return jwt.sign(payload, config.tokens.jwtPrivateKey, {

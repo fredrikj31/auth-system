@@ -1,4 +1,8 @@
-import { CommonQueryMethods, ForeignKeyIntegrityConstraintViolationError, sql } from "slonik";
+import {
+  CommonQueryMethods,
+  ForeignKeyIntegrityConstraintViolationError,
+  sql,
+} from "slonik";
 import { RefreshToken, RefreshTokenSchema } from "../../../types/schemas";
 import { logger } from "../../../logging";
 import { InternalServerError } from "../../../errors/server";
@@ -32,7 +36,10 @@ export const createRefreshToken = async (
     `);
   } catch (error) {
     if (error instanceof ForeignKeyIntegrityConstraintViolationError) {
-      logger.error({ error }, "User id doesn't match any user ids in users table");
+      logger.error(
+        { error },
+        "User id doesn't match any user ids in users table",
+      );
       throw new BadRequestError({
         code: "user-id-not-found",
         message: "The provided user id doesn't exists in users table",

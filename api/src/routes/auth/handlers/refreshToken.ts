@@ -32,7 +32,9 @@ export const refreshTokenHandler = async ({
   }
 
   // Lookup refresh token in database
-  const refreshTokenItem = await checkRefreshToken(database, { refreshTokenId });
+  const refreshTokenItem = await checkRefreshToken(database, {
+    refreshTokenId,
+  });
 
   if (refreshTokenItem.expiresAt < new Date().toISOString()) {
     throw new BadRequestError({
@@ -44,7 +46,9 @@ export const refreshTokenHandler = async ({
   // Get user details
   const user = await getUserById(database, { userId: refreshTokenItem.userId });
 
-  const expiresAt = new Date(Date.now() + config.jwt.accessTokenTTLSeconds * 1000).toISOString();
+  const expiresAt = new Date(
+    Date.now() + config.jwt.accessTokenTTLSeconds * 1000,
+  ).toISOString();
 
   // Sign new access token
   const newAccessToken = signJwt({

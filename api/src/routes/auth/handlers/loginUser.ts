@@ -32,7 +32,9 @@ export const loginUserHandler = async ({
     password,
   });
 
-  const accessTokenExpiresAt = new Date(new Date().getTime() + config.jwt.accessTokenTTLSeconds * 1000).toISOString();
+  const accessTokenExpiresAt = new Date(
+    new Date().getTime() + config.jwt.accessTokenTTLSeconds * 1000,
+  ).toISOString();
   const accessToken = signJwt({
     payload: {
       userId: user.id,
@@ -41,7 +43,9 @@ export const loginUserHandler = async ({
     expiresInSeconds: config.jwt.accessTokenTTLSeconds,
   });
 
-  const refreshTokenExpiresAt = new Date(Date.now() + config.jwt.refreshTokenTTLSeconds * 1000).toISOString();
+  const refreshTokenExpiresAt = new Date(
+    Date.now() + config.jwt.refreshTokenTTLSeconds * 1000,
+  ).toISOString();
   const refreshTokenId = randomUUID();
   const refreshToken = signJwt({
     payload: {},
@@ -52,7 +56,9 @@ export const loginUserHandler = async ({
   await createRefreshToken(database, {
     tokenId: refreshTokenId,
     userId: user.id,
-    expiresAt: new Date(Date.now() + config.jwt.refreshTokenTTLSeconds * 1000).toISOString(),
+    expiresAt: new Date(
+      Date.now() + config.jwt.refreshTokenTTLSeconds * 1000,
+    ).toISOString(),
   });
 
   return {
