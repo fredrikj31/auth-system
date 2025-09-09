@@ -14,10 +14,12 @@
     "app:format:check": "pnpm run --filter @thoughts/app format:check",
     "api:format:write": "pnpm run --filter @thoughts/api format:write",
     "app:format:write": "pnpm run --filter @thoughts/app format:write",
-    "prepare": "husky"
+    "prepare": "husky",
+    "pre-commit": "lint-staged -c lint-staged.config.js"
   },
   "devDependencies": {
-    "husky": "^9.1.6"
+    "husky": "^9.1.6",
+    "lint-staged": "^16.1.6"
   },
   "packageManager": "pnpm@9.0.0",
   "engines": {
