@@ -11,11 +11,10 @@ import { Input } from "@shadcn-ui/components/ui/input";
 import { Label } from "@shadcn-ui/components/ui/label";
 import { Link } from "react-router-dom";
 import { useState } from "react";
-import { useToast } from "@shadcn-ui/components/ui/use-toast";
+import { toast } from "sonner";
 import { useAuth } from "../providers/auth";
 
 export const LoginPage = () => {
-  const { toast } = useToast();
   const auth = useAuth();
 
   const [username, setUsername] = useState<string>("");
@@ -23,10 +22,7 @@ export const LoginPage = () => {
 
   const login = () => {
     if (!username || !password) {
-      toast({
-        title: "Empty fields!",
-        description: "Please fill out all the fields.",
-      });
+      toast("Empty fields! Please fill out all the fields.");
       return;
     }
 

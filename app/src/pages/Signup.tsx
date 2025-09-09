@@ -19,11 +19,10 @@ import { CalendarIcon } from "lucide-react";
 import { Calendar } from "@shadcn-ui/components/ui/calendar";
 import { useState } from "react";
 import { format } from "date-fns";
-import { useToast } from "@shadcn-ui/components/ui/use-toast";
+import { toast } from "sonner";
 import { useAuth } from "../providers/auth";
 
 export const SignupPage = () => {
-  const { toast } = useToast();
   const auth = useAuth();
 
   const [email, setEmail] = useState<string>("");
@@ -33,10 +32,7 @@ export const SignupPage = () => {
 
   const signup = () => {
     if (!email || !username || !password || !birthDate) {
-      toast({
-        title: "Fields Empty!",
-        description: "Please fill out all the input fields",
-      });
+      toast("Fields Empty! Please fill out all the input fields");
       return;
     }
 

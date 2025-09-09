@@ -1,4 +1,4 @@
-import { JSX } from "react";
+import { type JSX } from "react";
 import { Navigate, Outlet } from "react-router-dom";
 import { useAuth } from "../providers/auth";
 

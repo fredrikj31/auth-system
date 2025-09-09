@@ -1,8 +1,7 @@
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
-import { useToast } from "@shadcn-ui/components/ui/use-toast";
-import { ToastAction } from "@shadcn-ui/components/ui/toast";
+import { toast } from "sonner";
 import { decodeJwtToken } from "../helpers/decodeJwtToken";
 import { useLoginUser } from "../api/loginUser/useLoginUser";
 import { useSignupUser } from "../api/signupUser/useSignupUser";
@@ -50,7 +49,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   );
 
   const navigate = useNavigate();
-  const { toast } = useToast();
   const { mutate: loginUser } = useLoginUser();
   const { mutate: signupUser } = useSignupUser();
   const { mutate: logoutUser } = useLogoutUser();
@@ -67,11 +65,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const login = (data: { username: string; password: string }) => {
     loginUser(data, {
       onError: (error) => {
-        toast({
-          variant: "destructive",
-          title: "Error logging in!",
-          description: error.message,
-        });
+        console.error("Error logging in!", error);
+        toast("Error logging in!");
       },
       onSuccess: () => {
         setUserId(decodedAccessToken?.userId);
@@ -84,11 +79,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const logout = () => {
     logoutUser(undefined, {
       onError: (error) => {
-        toast({
-          variant: "destructive",
-          title: "Error logging out!",
-          description: error.message,
-        });
+        console.error("Error logging out!", error);
+        toast("Error logging out!");
       },
       onSuccess: () => {
         setUserId(undefined);
@@ -105,22 +97,11 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   }) => {
     signupUser(data, {
       onError: (error) => {
-        toast({
-          variant: "destructive",
-          title: "Error signing up!",
-          description: error.message,
-        });
+        console.error("Error signing up!", error);
+        toast("Error signing up!");
       },
       onSuccess: () => {
-        toast({
-          title: "Successfully signed up!",
-          description: "Welcome to the club. You are now signed up",
-          action: (
-            <ToastAction altText="Login" onClick={() => navigate("/")}>
-              Login
-            </ToastAction>
-          ),
-        });
+        toast("Successfully signed up!");
         navigate("/login");
       },
     });
