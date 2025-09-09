@@ -19,7 +19,7 @@
     "pre-commit": "lint-staged -c lint-staged.config.js"
   },
   "devDependencies": {
-    "husky": "^9.1.6",
+    "husky": "^9.1.7",
     "lint-staged": "^16.1.6"
   },
   "packageManager": "pnpm@9.0.0",
