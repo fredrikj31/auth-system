@@ -1,4 +1,4 @@
-import { InternalAxiosRequestConfig } from "axios";
+import { type InternalAxiosRequestConfig } from "axios";
 import cookies from "js-cookie";
 import { refreshToken } from "./refreshToken";
 

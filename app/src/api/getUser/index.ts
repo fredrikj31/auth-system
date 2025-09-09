@@ -1,4 +1,4 @@
-import { User, UserSchema } from "../../types/User";
+import { type User, UserSchema } from "../../types/User";
 import { apiClient } from "../client";
 import { ApiError } from "../errors";
 

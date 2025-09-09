@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import { signupUser, SignupUserOptions } from ".";
+import { signupUser, type SignupUserOptions } from ".";
 import { ApiError } from "../errors";
 
 export const useSignupUser = () => {

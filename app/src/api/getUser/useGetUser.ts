@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { getUser } from ".";
 import { ApiError } from "../errors";
-import { User } from "../../types/User";
+import { type User } from "../../types/User";
 
 export const useGetUser = () => {
   return useQuery<User, ApiError>({
