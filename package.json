@@ -2,19 +2,22 @@
   "name": "auth-system",
   "private": true,
   "scripts": {
-    "build": "turbo build",
-    "dev": "turbo dev",
-    "tsc": "turbo tsc",
-    "lint": "turbo lint",
-    "format": "prettier . --check",
+    "api:build": "pnpm run --filter @thoughts/api build",
+    "app:build": "pnpm run --filter @thoughts/app build",
+    "api:build:check": "pnpm run --filter @thoughts/api build:check",
+    "app:build:check": "pnpm run --filter @thoughts/app build:check",
+    "api:dev": "pnpm run --filter @thoughts/api dev",
+    "app:dev": "pnpm run --filter @thoughts/app dev",
+    "api:lint": "pnpm run --filter @thoughts/api lint",
+    "app:lint": "pnpm run --filter @thoughts/app lint",
+    "api:format:check": "pnpm run --filter @thoughts/api format:check",
+    "app:format:check": "pnpm run --filter @thoughts/app format:check",
+    "api:format:write": "pnpm run --filter @thoughts/api format:write",
+    "app:format:write": "pnpm run --filter @thoughts/app format:write",
     "prepare": "husky"
   },
   "devDependencies": {
-    "@auth-system/eslint-config": "workspace:*",
-    "@auth-system/typescript-config": "workspace:*",
-    "husky": "^9.1.6",
-    "prettier": "^3.3.3",
-    "turbo": "^2.1.3"
+    "husky": "^9.1.6"
   },
   "packageManager": "pnpm@9.0.0",
   "engines": {
