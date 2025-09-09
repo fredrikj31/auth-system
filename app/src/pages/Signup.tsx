@@ -1,9 +1,19 @@
 import { Label } from "@radix-ui/react-label";
 import { Button } from "@shadcn-ui/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@shadcn-ui/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@shadcn-ui/components/ui/card";
 import { Input } from "@shadcn-ui/components/ui/input";
 import { Link } from "react-router-dom";
-import { Popover, PopoverContent, PopoverTrigger } from "@shadcn-ui/components/ui/popover";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@shadcn-ui/components/ui/popover";
 import { cn } from "@shadcn-ui/lib/utils";
 import { CalendarIcon } from "lucide-react";
 import { Calendar } from "@shadcn-ui/components/ui/calendar";
@@ -43,7 +53,9 @@ export const SignupPage = () => {
       <Card className="mx-auto">
         <CardHeader>
           <CardTitle className="text-xl">Sign Up</CardTitle>
-          <CardDescription>Enter your information to create an account</CardDescription>
+          <CardDescription>
+            Enter your information to create an account
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid gap-4">
@@ -74,21 +86,36 @@ export const SignupPage = () => {
                   <PopoverTrigger asChild>
                     <Button
                       variant={"outline"}
-                      className={cn("justify-start text-left font-normal", !birthDate && "text-muted-foreground")}
+                      className={cn(
+                        "justify-start text-left font-normal",
+                        !birthDate && "text-muted-foreground",
+                      )}
                     >
                       <CalendarIcon className="mr-2 h-4 w-4" />
-                      {birthDate ? format(birthDate, "PPP") : <span>Pick a date</span>}
+                      {birthDate ? (
+                        format(birthDate, "PPP")
+                      ) : (
+                        <span>Pick a date</span>
+                      )}
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className="w-auto p-0">
-                    <Calendar mode="single" selected={birthDate} onSelect={setBirthDate} />
+                    <Calendar
+                      mode="single"
+                      selected={birthDate}
+                      onSelect={setBirthDate}
+                    />
                   </PopoverContent>
                 </Popover>
               </div>
             </div>
             <div className="grid gap-2">
               <Label htmlFor="password">Password</Label>
-              <Input id="password" type="password" onChange={(e) => setPassword(e.currentTarget.value)} />
+              <Input
+                id="password"
+                type="password"
+                onChange={(e) => setPassword(e.currentTarget.value)}
+              />
             </div>
             <Button type="submit" className="w-full" onClick={signup}>
               Create an account

@@ -17,7 +17,8 @@ export const authRoutes: FastifyPluginAsync = async (instance) => {
     {
       schema: {
         summary: "Signs up a user",
-        description: "Signs a user up, and inserts the details into the database.",
+        description:
+          "Signs a user up, and inserts the details into the database.",
         tags: ["actions"],
         body: UserSchema.pick({
           username: true,
@@ -41,7 +42,8 @@ export const authRoutes: FastifyPluginAsync = async (instance) => {
     {
       schema: {
         summary: "Logins a user",
-        descriptions: "Logins a user with the specified credentials. Returns an access and refresh token.",
+        descriptions:
+          "Logins a user with the specified credentials. Returns an access and refresh token.",
         tags: ["actions"],
         body: UserSchema.pick({ username: true, password: true }),
         response: {
@@ -54,7 +56,10 @@ export const authRoutes: FastifyPluginAsync = async (instance) => {
       },
     },
     async (req, res) => {
-      const { accessToken, refreshToken } = await loginUserHandler({ database, ...req.body });
+      const { accessToken, refreshToken } = await loginUserHandler({
+        database,
+        ...req.body,
+      });
 
       // Sets access and refresh token in the cookies
       res.setCookie("access_token", accessToken.token, {
@@ -133,7 +138,10 @@ export const authRoutes: FastifyPluginAsync = async (instance) => {
     async (req, res) => {
       // Get refresh token from body
       const refreshToken = req.body.refreshToken;
-      const { token, expiresAt } = await refreshTokenHandler({ database, refreshToken });
+      const { token, expiresAt } = await refreshTokenHandler({
+        database,
+        refreshToken,
+      });
 
       // Sets new access token in the cookies
       res.setCookie("access_token", token, {

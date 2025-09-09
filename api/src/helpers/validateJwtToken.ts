@@ -1,4 +1,8 @@
-import jwt, { TokenExpiredError, JsonWebTokenError, JwtPayload } from "jsonwebtoken";
+import jwt, {
+  TokenExpiredError,
+  JsonWebTokenError,
+  JwtPayload,
+} from "jsonwebtoken";
 import { config } from "../config";
 import { UnauthorizedError } from "../errors/client";
 import { logger } from "../logging";
@@ -7,7 +11,9 @@ interface ValidateJwtOptions {
   token: string;
 }
 
-export const validateJwtToken = async ({ token }: ValidateJwtOptions): Promise<JwtPayload> => {
+export const validateJwtToken = async ({
+  token,
+}: ValidateJwtOptions): Promise<JwtPayload> => {
   try {
     const jwtPayload = jwt.verify(token, config.tokens.jwtPrivateKey);
     if (typeof jwtPayload === "string") {
@@ -22,7 +28,10 @@ export const validateJwtToken = async ({ token }: ValidateJwtOptions): Promise<J
       });
     }
 
-    if (error instanceof JsonWebTokenError && error.message === "invalid token") {
+    if (
+      error instanceof JsonWebTokenError &&
+      error.message === "invalid token"
+    ) {
       throw new UnauthorizedError({
         code: "invalid-token",
         message: "The provided token is invalid",

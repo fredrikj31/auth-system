@@ -2,7 +2,9 @@ interface DecodeJwtTokenOptions {
   token: string | undefined;
 }
 
-export const decodeJwtToken = <T>({ token }: DecodeJwtTokenOptions): T | undefined => {
+export const decodeJwtToken = <T>({
+  token,
+}: DecodeJwtTokenOptions): T | undefined => {
   if (!token) {
     return undefined;
   }

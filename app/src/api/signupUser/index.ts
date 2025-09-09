@@ -9,7 +9,12 @@ export interface SignupUserOptions {
   birthDate: string;
 }
 
-export const signupUser = async ({ email, username, password, birthDate }: SignupUserOptions): Promise<void> => {
+export const signupUser = async ({
+  email,
+  username,
+  password,
+  birthDate,
+}: SignupUserOptions): Promise<void> => {
   try {
     await apiClient.post("/signup", {
       email,

@@ -8,7 +8,7 @@ export const logoutUser = async (): Promise<void> => {
     await apiClient.post("/logout", {
       refreshToken,
     });
-  } catch (error) {
+  } catch {
     throw new ApiError({
       statusCode: 500,
       code: "unknown-error",

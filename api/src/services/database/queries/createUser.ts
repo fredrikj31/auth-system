@@ -14,7 +14,14 @@ interface CreateUserOptions {
 
 export const createUser = async (
   database: CommonQueryMethods,
-  { userId, username, hashedPassword, passwordSalt, email, birthDate }: CreateUserOptions,
+  {
+    userId,
+    username,
+    hashedPassword,
+    passwordSalt,
+    email,
+    birthDate,
+  }: CreateUserOptions,
 ): Promise<User> => {
   try {
     return await database.one(sql.type(UserSchema)`

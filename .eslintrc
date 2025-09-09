@@ -1,8 +1,0 @@
-{
-  "ignorePatterns": ["api/**", "app/**", "packages/**"],
-  "extends": ["@auth-system/eslint-config/library.js"],
-  "parser": "@typescript-eslint/parser",
-  "parserOptions": {
-    "project": true
-  }
-}

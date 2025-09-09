@@ -1,5 +1,12 @@
 import { Button } from "@shadcn-ui/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@shadcn-ui/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@shadcn-ui/components/ui/card";
 import { Skeleton } from "@shadcn-ui/components/ui/skeleton";
 import { useGetUser } from "../api/getUser/useGetUser";
 import { useAuth } from "../providers/auth";
@@ -40,7 +47,9 @@ export const HomePage = () => {
           <CardHeader>
             <CardTitle className="text-2xl">Profile not found.</CardTitle>
           </CardHeader>
-          <CardContent>Your profile information was not found. Please contact an admin.</CardContent>
+          <CardContent>
+            Your profile information was not found. Please contact an admin.
+          </CardContent>
           <CardFooter>
             <Button className="w-full" onClick={logout}>
               Logout
@@ -56,7 +65,9 @@ export const HomePage = () => {
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle className="text-2xl">Welcome {data.username}</CardTitle>
-          <CardDescription>Here is a list of all your information.</CardDescription>
+          <CardDescription>
+            Here is a list of all your information.
+          </CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col gap-2">
           <div className="flex flex-row justify-between">

@@ -1,5 +1,12 @@
 import { Button } from "@shadcn-ui/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@shadcn-ui/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@shadcn-ui/components/ui/card";
 import { Input } from "@shadcn-ui/components/ui/input";
 import { Label } from "@shadcn-ui/components/ui/label";
 import { Link } from "react-router-dom";
@@ -34,7 +41,9 @@ export const LoginPage = () => {
       <Card className="w-full max-w-sm">
         <CardHeader>
           <CardTitle className="text-2xl">Login</CardTitle>
-          <CardDescription>Enter your username and password below to login to your account.</CardDescription>
+          <CardDescription>
+            Enter your username and password below to login to your account.
+          </CardDescription>
         </CardHeader>
         <CardContent className="grid gap-4">
           <div className="grid gap-2">
