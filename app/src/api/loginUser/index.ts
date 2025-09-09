@@ -7,7 +7,10 @@ export interface LoginUserOptions {
   password: string;
 }
 
-export const loginUser = async ({ username, password }: LoginUserOptions): Promise<void> => {
+export const loginUser = async ({
+  username,
+  password,
+}: LoginUserOptions): Promise<void> => {
   try {
     await apiClient.post("/login", {
       username,

@@ -6,7 +6,7 @@ export const getUser = async (): Promise<User> => {
   try {
     const { data } = await apiClient.get("/users/me");
     return UserSchema.parse(data);
-  } catch (error) {
+  } catch {
     throw new ApiError({
       statusCode: 500,
       code: "unknown-error",

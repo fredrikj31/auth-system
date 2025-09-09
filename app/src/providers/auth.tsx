@@ -18,14 +18,21 @@ type AuthProviderValue = {
   userId: string | undefined;
   // Methods
   login: (data: { username: string; password: string }) => void;
-  signup: (data: { email: string; username: string; password: string; birthDate: string }) => void;
+  signup: (data: {
+    email: string;
+    username: string;
+    password: string;
+    birthDate: string;
+  }) => void;
   logout: () => void;
 };
 
 const AuthContext = createContext<AuthProviderValue | null>(null);
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
-  const [accessToken, setAccessToken] = useState<string | undefined>(cookies.get("access_token"));
+  const [accessToken, setAccessToken] = useState<string | undefined>(
+    cookies.get("access_token"),
+  );
   const refreshTokenCookie = cookies.get("refresh_token");
 
   const decodedAccessToken = useMemo<{ userId: string } | undefined>(() => {
@@ -38,7 +45,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     return accessToken !== undefined ? true : false;
   }, [accessToken]);
 
-  const [userId, setUserId] = useState<string | undefined>(decodedAccessToken?.userId);
+  const [userId, setUserId] = useState<string | undefined>(
+    decodedAccessToken?.userId,
+  );
 
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -88,7 +97,12 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     });
   };
 
-  const signup = (data: { email: string; username: string; password: string; birthDate: string }) => {
+  const signup = (data: {
+    email: string;
+    username: string;
+    password: string;
+    birthDate: string;
+  }) => {
     signupUser(data, {
       onError: (error) => {
         toast({
@@ -113,7 +127,11 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, userId, login, logout, signup }}>{children}</AuthContext.Provider>
+    <AuthContext.Provider
+      value={{ isAuthenticated, userId, login, logout, signup }}
+    >
+      {children}
+    </AuthContext.Provider>
   );
 };
 

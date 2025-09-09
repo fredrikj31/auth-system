@@ -11,7 +11,10 @@ interface IsAccessTokenExpiredOptions {
   accessToken: string | undefined;
   refreshToken: string | undefined;
 }
-const isAccessTokenExpired = ({ accessToken, refreshToken }: IsAccessTokenExpiredOptions): boolean => {
+const isAccessTokenExpired = ({
+  accessToken,
+  refreshToken,
+}: IsAccessTokenExpiredOptions): boolean => {
   if (!refreshToken) {
     clearCookies();
     return false;
@@ -22,7 +25,9 @@ const isAccessTokenExpired = ({ accessToken, refreshToken }: IsAccessTokenExpire
   }
 
   try {
-    const payload = JSON.parse(atob(decodeURIComponent(accessToken.split(".")[1] ?? "")));
+    const payload = JSON.parse(
+      atob(decodeURIComponent(accessToken.split(".")[1] ?? "")),
+    );
     // 5 seconds buffer to prevent token expiring during API call
     if (new Date((payload.exp - 5) * 1000).getTime() < Date.now()) {
       return true;
@@ -37,7 +42,9 @@ const isAccessTokenExpired = ({ accessToken, refreshToken }: IsAccessTokenExpire
   return false;
 };
 
-export const authInterceptor = async (axiosConfig: InternalAxiosRequestConfig) => {
+export const authInterceptor = async (
+  axiosConfig: InternalAxiosRequestConfig,
+) => {
   let accessTokenCookie = cookies.get("access_token");
   const refreshTokenCookie = cookies.get("refresh_token");
 

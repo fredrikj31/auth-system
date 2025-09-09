@@ -7,7 +7,10 @@ interface ProtectedRouteProps {
   children: JSX.Element;
 }
 
-export const ProtectedRoute = ({ redirectPath, children }: ProtectedRouteProps) => {
+export const ProtectedRoute = ({
+  redirectPath,
+  children,
+}: ProtectedRouteProps) => {
   const auth = useAuth();
 
   if (!auth.isAuthenticated) {

@@ -4,6 +4,7 @@ import { ApiError } from "../errors";
 
 export const useLoginUser = () => {
   return useMutation<void, ApiError, LoginUserOptions>({
-    mutationFn: ({ username, password }: LoginUserOptions) => loginUser({ username, password }),
+    mutationFn: ({ username, password }: LoginUserOptions) =>
+      loginUser({ username, password }),
   });
 };
