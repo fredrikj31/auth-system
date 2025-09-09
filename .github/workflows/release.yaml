@@ -11,44 +11,63 @@ jobs:
   file-changes:
     runs-on: ubuntu-latest
     outputs:
-      file-changes-backend: ${{ steps.file-changes-api.outputs.CONTINUE }}
-      file-changes-frontend: ${{ steps.file-changes-app.outputs.CONTINUE }}
+      file-changes-backend: ${{ steps.check_changes.outputs.api_changed }}
+      file-changes-frontend: ${{ steps.check_changes.outputs.app_changed }}
     steps:
-      - name: Checkout
+      # 1. Check out the repository's code
+      - name: Checkout Code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 2
+          # Fetch all history so we can compare tags
+          fetch-depth: 0
 
-      - name: Install pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 9.0.0
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: "pnpm"
-
-      - id: file-changes-api
+      # 2. Natively check for file changes in 'api' and 'app'
+      - name: Check for file changes
+        id: check_changes
         run: |
-          if pnpm dlx turbo-ignore @auth-system/api; then
-            echo "CONTINUE=0" >> "$GITHUB_OUTPUT"
-          else
-            echo "CONTINUE=1" >> "$GITHUB_OUTPUT"
+          # The new tag for this release
+          CURRENT_TAG=${{ github.ref_name }}
+          echo "Current release tag: $CURRENT_TAG"
+
+          # Use the GitHub CLI to get the tag name of the *previous* release.
+          # It lists the last 2 releases and we grab the second one's tag.
+          PREVIOUS_TAG=$(gh release list --limit 2 --json tagName -q '.[1].tagName')
+
+          # If there is no previous tag, it's the first release. Assume changes.
+          if [[ -z "$PREVIOUS_TAG" ]]; then
+            echo "No previous release found. Assuming this is the first release."
+            echo "api_changed=true" >> $GITHUB_OUTPUT
+            echo "app_changed=true" >> $GITHUB_OUTPUT
+            exit 0
           fi
 
-      - id: file-changes-app
-        run: |
-          if pnpm dlx turbo-ignore @auth-system/app; then
-            echo "CONTINUE=0" >> "$GITHUB_OUTPUT"
+          echo "Comparing changes between $PREVIOUS_TAG and $CURRENT_TAG"
+
+          # Use 'git diff --quiet' which exits with 0 if no changes, 1 if changes.
+          # We check the 'api' folder.
+          if git diff --quiet $PREVIOUS_TAG $CURRENT_TAG -- api; then
+            echo "No changes detected in 'api' folder."
+            echo "api_changed=false" >> $GITHUB_OUTPUT
           else
-            echo "CONTINUE=1" >> "$GITHUB_OUTPUT"
+            echo "Changes detected in 'api' folder."
+            echo "api_changed=true" >> $GITHUB_OUTPUT
           fi
+
+          # We check the 'app' folder.
+          if git diff --quiet $PREVIOUS_TAG $CURRENT_TAG -- app; then
+            echo "No changes detected in 'app' folder."
+            echo "app_changed=false" >> $GITHUB_OUTPUT
+          else
+            echo "Changes detected in 'app' folder."
+            echo "app_changed=true" >> $GITHUB_OUTPUT
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   push-frontend-docker-image:
     needs: [file-changes]
     runs-on: ubuntu-latest
-    if: ${{ needs.file-changes.outputs.file-changes-frontend == '1' }}
+    if: ${{ needs.file-changes.outputs.file-changes-frontend == 'true' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -76,7 +95,7 @@ jobs:
   push-backend-docker-image:
     needs: [file-changes]
     runs-on: ubuntu-latest
-    if: ${{ needs.file-changes.outputs.file-changes-backend == '1' }}
+    if: ${{ needs.file-changes.outputs.file-changes-backend == 'true' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
