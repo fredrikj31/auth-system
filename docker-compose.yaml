@@ -1,10 +1,25 @@
 services:
-  database:
+  local-database:
     container_name: auth-system-database
-    image: postgres:17-alpine
+    image: "postgres:17-alpine"
     restart: always
     profiles:
       - dev
+    environment:
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: auth-system
+    ports:
+      - 5432:5432
+    volumes:
+      - ./.docker/database:/var/lib/postgresql/data # locally bound ".docker" folder
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql # init database with SQL files from local "database" folder
+
+  database:
+    container_name: auth-system-database
+    image: "postgres:17-alpine"
+    restart: always
+    profiles:
       - prod
     environment:
       POSTGRES_USER: ${DB_USERNAME}
@@ -36,6 +51,7 @@ services:
       DB_PASSWORD: ${DB_PASSWORD}
     networks:
       - auth-system-network
+      - cloudflared
     ports:
       - 2001:3000
 
@@ -47,12 +63,16 @@ services:
       - prod
     environment:
       MY_APP_API_BASE_URL: ${MY_APP_API_BASE_URL}
+    networks:
+      - cloudflared
     ports:
       - 2002:80
 
 networks:
   auth-system-network:
     driver: bridge
+  cloudflared:
+    external: true
 
 volumes:
   database-data:
