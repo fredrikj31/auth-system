@@ -8,9 +8,11 @@ import {
   createPool,
   Interceptor,
   QueryResultRow,
+  SchemaValidationError,
 } from "slonik";
 import { createFieldNameTransformationInterceptor } from "slonik-interceptor-field-name-transformation";
 import { logger } from "../../logging";
+import z from "zod";
 
 interface DatabasePluginOptions {
   dbUsername: string;
@@ -30,7 +32,11 @@ const database = async (
       {
         interceptors: [
           createFieldNameTransformationInterceptor({
-            format: "CAMEL_CASE",
+            test: (field) => {
+              return (
+                field.name !== "__typename" && /^[\d_a-z]+$/u.test(field.name)
+              );
+            },
           }),
           zodParserInterceptor(),
         ],
@@ -65,17 +71,29 @@ const customTimestampParser: { name: string; parse: (s: string) => string } = {
 
 const zodParserInterceptor = (): Interceptor => {
   return {
-    transformRow: (executionContext, actualQuery, row) => {
-      const { resultParser } = executionContext;
+    name: "zod-result-parser-interceptor",
+    // If you are not going to transform results using Zod, then you should use `afterQueryExecution` instead.
+    // Future versions of Zod will provide a more efficient parser when parsing without transformations.
+    // You can even combine the two – use `afterQueryExecution` to validate results, and (conditionally)
+    // transform results as needed in `transformRow`.
+    transformRowAsync: async (queryContext, query, result) => {
+      const { resultParser } = queryContext;
 
       if (!resultParser) {
-        return row;
+        return result;
       }
 
-      const validationResult = resultParser.safeParse(row);
+      // It is recommended (but not required) to parse async to avoid blocking the event loop during validation
+      const validationResult = await (
+        resultParser as z.ZodSchema
+      ).safeParseAsync(result);
 
       if (!validationResult.success) {
-        throw new Error("The database returned some invalid data.");
+        throw new SchemaValidationError(
+          query,
+          result,
+          validationResult.error.issues,
+        );
       }
 
       return validationResult.data as QueryResultRow;
