@@ -1,18 +1,10 @@
 import { FastifyDynamicSwaggerOptions } from "@fastify/swagger";
-import { FastifySwaggerUiOptions } from "@fastify/swagger-ui";
 import { jsonSchemaTransform } from "fastify-type-provider-zod";
-
-export const swaggerUiConfig: FastifySwaggerUiOptions = {
-  routePrefix: "/docs",
-  logo: {
-    content: "",
-    type: "",
-  },
-};
 
 export const swaggerConfig: FastifyDynamicSwaggerOptions = {
   mode: "dynamic",
-  swagger: {
+  openapi: {
+    openapi: "3.0.0",
     info: {
       title: "Auth System",
       description: "A simple authentication/authorization system",
@@ -22,15 +14,21 @@ export const swaggerConfig: FastifyDynamicSwaggerOptions = {
       url: "https://github.com/fredrikj31/auth-system",
       description: "Find more info here",
     },
-    host: "localhost",
-    schemes: ["http"],
-    consumes: ["application/json"],
-    produces: ["application/json"],
-    securityDefinitions: {
-      jwt: {
-        type: "apiKey",
-        name: "Authorization",
-        in: "header",
+    servers: [
+      {
+        url: "http://127.0.0.1:3000",
+        description: "Development server",
+      },
+    ],
+    components: {
+      securitySchemes: {
+        jwt: {
+          type: "http",
+          scheme: "bearer",
+          bearerFormat: "JWT",
+          summary: "Access Token",
+          description: "Provided access token from when you logged in",
+        },
       },
     },
   },

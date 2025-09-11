@@ -1,14 +1,17 @@
 import Fastify, { FastifyInstance } from "fastify";
 import { routes } from "./routes";
 import fastifySwagger from "@fastify/swagger";
-import fastifySwaggerUi from "@fastify/swagger-ui";
-import { swaggerConfig, swaggerUiConfig } from "./plugins/swagger";
+import { swaggerConfig } from "./plugins/swagger";
 import { databasePlugin } from "./services/database/client";
 import { config } from "./config";
 import { logger } from "./logging";
 import { BaseError } from "./errors";
 import fastifyCors from "@fastify/cors";
 import fastifyCookie from "@fastify/cookie";
+import {
+  hasZodFastifySchemaValidationErrors,
+  isResponseSerializationError,
+} from "fastify-type-provider-zod";
 
 const app: FastifyInstance = Fastify({
   logger: true,
@@ -16,7 +19,9 @@ const app: FastifyInstance = Fastify({
 
 app
   .register(fastifySwagger, swaggerConfig)
-  .register(fastifySwaggerUi, swaggerUiConfig)
+  .register(import("@scalar/fastify-api-reference"), {
+    routePrefix: "/docs",
+  })
   .register(fastifyCors, {
     origin: config.website.baseUrl,
     methods: ["GET", "POST"],
@@ -40,10 +45,37 @@ app
     app.register(routes, { prefix: "/api" });
   });
 
-app.setErrorHandler((error, _, res) => {
+app.setErrorHandler((error, req, res) => {
   // Catch all BaseErrors and send back their payload
   if (error instanceof BaseError) {
     return res.status(error.statusCode).send(error.toJSON());
+  }
+
+  // Return validation errors
+  if (hasZodFastifySchemaValidationErrors(error)) {
+    return res.status(400).send({
+      error: "Response Validation Error",
+      message: "Request doesn't match the schema",
+      statusCode: 400,
+      details: {
+        issues: error.validation,
+        method: req.method,
+        url: req.url,
+      },
+    });
+  }
+
+  if (isResponseSerializationError(error)) {
+    return res.status(500).send({
+      error: "Internal Server Error",
+      message: "Response doesn't match the schema",
+      statusCode: 500,
+      details: {
+        issues: error.cause.issues,
+        method: error.method,
+        url: error.url,
+      },
+    });
   }
 
   // If any other error occurs, catch it and return a fixed error message
