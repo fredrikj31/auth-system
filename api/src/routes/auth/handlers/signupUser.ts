@@ -1,5 +1,5 @@
 import { CommonQueryMethods } from "slonik";
-import { createUser } from "../../../services/database/queries/createUser";
+import { createAccount } from "../../../services/database/queries/account/createAccount";
 import { doesEmailExist } from "../../../services/database/queries/doesEmailExist";
 import { User } from "../../../types/schemas";
 import { ConflictError } from "../../../errors/client";
@@ -38,7 +38,7 @@ export const signupUserHandler = async ({
     salt: config.tokens.passwordSalt,
   });
 
-  const createdUser = await createUser(database, {
+  const createdUser = await createAccount(database, {
     userId,
     hashedPassword,
     passwordSalt: userSalt,
