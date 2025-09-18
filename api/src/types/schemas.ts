@@ -1,18 +1,8 @@
 import { z } from "zod";
 
-export const UserSchema = z.object({
-  id: z.string().uuid(),
-  username: z.string(),
-  password: z.string(),
-  salt: z.string(),
-  email: z.string().email(),
-  birthDate: z.string(),
-});
-export type User = z.infer<typeof UserSchema>;
+export const GenderSchema = z.enum(["MALE", "FEMALE", "PREFER_NOT_TO_SAY"]);
+export type Gender = z.infer<typeof GenderSchema>;
 
-export const RefreshTokenSchema = z.object({
-  id: z.string(),
-  userId: z.string(),
-  expiresAt: z.string().datetime(),
-});
-export type RefreshToken = z.infer<typeof RefreshTokenSchema>;
+export const DateSchema = z.regex(
+  /^(?:19[0-9]{2}|2[0-1][0-9]{2})-(?:0[1-9]|1[0-2])-(?:0[1-9]|[1-2][0-9]|3[0-1])$/,
+);
