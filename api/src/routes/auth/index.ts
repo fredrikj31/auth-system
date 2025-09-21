@@ -1,12 +1,14 @@
 import { FastifyPluginAsync } from "fastify";
 import { ZodTypeProvider } from "fastify-type-provider-zod";
-import { UserSchema } from "../../types/schemas";
+import { AccountSchema } from "../../types/account";
+import { ProfileSchema } from "../../types/profile";
 import { z } from "zod";
-import { loginUserHandler } from "./handlers/loginUser";
-import { signupUserHandler } from "./handlers/signupUser";
+import { loginHandler } from "./handlers/login";
+import { signupHandler } from "./handlers/signup";
 import { refreshTokenHandler } from "./handlers/refreshToken";
 import { NotFoundError } from "../../errors/client";
-import { logoutUserHandler } from "./handlers/logoutUser";
+import { logoutHandler } from "./handlers/logout";
+import { DateTime } from "luxon";
 
 export const authRoutes: FastifyPluginAsync = async (instance) => {
   const app = instance.withTypeProvider<ZodTypeProvider>();
@@ -20,19 +22,42 @@ export const authRoutes: FastifyPluginAsync = async (instance) => {
         description:
           "Signs a user up, and inserts the details into the database.",
         tags: ["actions"],
-        body: UserSchema.pick({
-          username: true,
-          password: true,
-          email: true,
-          birthDate: true,
+        body: z.object({
+          ...AccountSchema.omit({
+            userId: true,
+            passwordSalt: true,
+            createdAt: true,
+            updatedAt: true,
+            deletedAt: true,
+          }).shape,
+          ...ProfileSchema.omit({
+            userId: true,
+            createdAt: true,
+            updatedAt: true,
+            deletedAt: true,
+          }).shape,
         }),
         response: {
-          "200": UserSchema.omit({ password: true, salt: true }),
+          "200": z.object({
+            ...AccountSchema.omit({
+              password: true,
+              passwordSalt: true,
+              createdAt: true,
+              updatedAt: true,
+              deletedAt: true,
+            }).shape,
+            ...ProfileSchema.omit({
+              userId: true,
+              createdAt: true,
+              updatedAt: true,
+              deletedAt: true,
+            }).shape,
+          }),
         },
       },
     },
     async (req, res) => {
-      const user = await signupUserHandler({ database, user: req.body });
+      const user = await signupHandler({ database, user: req.body });
       return res.status(200).send(user);
     },
   );
@@ -45,7 +70,7 @@ export const authRoutes: FastifyPluginAsync = async (instance) => {
         descriptions:
           "Logins a user with the specified credentials. Returns an access and refresh token.",
         tags: ["actions"],
-        body: UserSchema.pick({ username: true, password: true }),
+        body: AccountSchema.pick({ email: true, password: true }),
         response: {
           "401": z.object({
             code: z.string(),
@@ -56,17 +81,17 @@ export const authRoutes: FastifyPluginAsync = async (instance) => {
       },
     },
     async (req, res) => {
-      const { accessToken, refreshToken } = await loginUserHandler({
+      const { accessToken, refreshToken } = await loginHandler({
         database,
         ...req.body,
       });
 
       // Sets access and refresh token in the cookies
       res.setCookie("access_token", accessToken.token, {
-        expires: new Date(accessToken.expiresAt),
+        expires: DateTime.fromISO(accessToken.expiresAt).toUTC().toJSDate(),
       });
       res.setCookie("refresh_token", refreshToken.token, {
-        expires: new Date(refreshToken.expiresAt),
+        expires: DateTime.fromISO(refreshToken.expiresAt).toUTC().toJSDate(),
       });
 
       return res.status(200).send();
@@ -102,7 +127,7 @@ export const authRoutes: FastifyPluginAsync = async (instance) => {
           message: "The refresh token was not found in the request body.",
         });
       }
-      await logoutUserHandler({ database, refreshToken });
+      await logoutHandler({ database, refreshToken });
 
       // Clears access and refresh token cookies
       res.clearCookie("access_token");
@@ -145,7 +170,7 @@ export const authRoutes: FastifyPluginAsync = async (instance) => {
 
       // Sets new access token in the cookies
       res.setCookie("access_token", token, {
-        expires: new Date(expiresAt),
+        expires: DateTime.fromISO(expiresAt).toUTC().toJSDate(),
       });
       return res.status(200).send({
         ok: true,

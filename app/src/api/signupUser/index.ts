@@ -1,26 +1,31 @@
 import { AxiosError } from "axios";
 import { apiClient } from "../client";
 import { ApiError } from "../errors";
-
-export interface SignupUserOptions {
-  email: string;
-  username: string;
-  password: string;
-  birthDate: string;
-}
+import type { Account } from "../../types/account";
+import type { Profile } from "../../types/profile";
 
 export const signupUser = async ({
   email,
-  username,
   password,
+  username,
+  firstName,
+  lastName,
   birthDate,
-}: SignupUserOptions): Promise<void> => {
+  gender,
+}: Pick<Account, "email" | "password"> &
+  Omit<
+    Profile,
+    "userId" | "createdAt" | "updatedAt" | "deletedAt"
+  >): Promise<void> => {
   try {
     await apiClient.post("/signup", {
       email,
-      username,
       password,
+      username,
+      firstName,
+      lastName,
       birthDate,
+      gender,
     });
   } catch (error) {
     if (error instanceof AxiosError) {

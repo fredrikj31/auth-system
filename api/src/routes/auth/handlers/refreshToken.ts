@@ -1,10 +1,11 @@
 import { CommonQueryMethods } from "slonik";
 import { BadRequestError } from "../../../errors/client";
 import { validateJwtToken } from "../../../helpers/validateJwtToken";
-import { checkRefreshToken } from "../../../services/database/queries/checkRefreshToken";
 import { signJwt } from "../../../helpers/signJwt";
-import { getUserById } from "../../../services/database/queries/getUserById";
 import { config } from "../../../config";
+import { checkRefreshToken } from "../../../services/database/queries/refreshToken/checkRefreshToken";
+import { getProfileById } from "../../../services/database/queries/profile/getProfileById";
+import { DateTime } from "luxon";
 
 interface RefreshTokenHandlerOptions {
   database: CommonQueryMethods;
@@ -36,7 +37,10 @@ export const refreshTokenHandler = async ({
     refreshTokenId,
   });
 
-  if (refreshTokenItem.expiresAt < new Date().toISOString()) {
+  if (
+    DateTime.fromISO(refreshTokenItem.expiresAt).toUnixInteger() <
+    DateTime.now().toUTC().toUnixInteger()
+  ) {
     throw new BadRequestError({
       code: "refresh-token-expired",
       message: "The provided refresh token has expired",
@@ -44,16 +48,19 @@ export const refreshTokenHandler = async ({
   }
 
   // Get user details
-  const user = await getUserById(database, { userId: refreshTokenItem.userId });
+  const user = await getProfileById(database, {
+    userId: refreshTokenItem.userId,
+  });
 
-  const expiresAt = new Date(
-    Date.now() + config.jwt.accessTokenTTLSeconds * 1000,
-  ).toISOString();
+  const expiresAt = DateTime.now()
+    .toUTC()
+    .plus({ seconds: config.jwt.accessTokenTTLSeconds * 1000 })
+    .toISO();
 
   // Sign new access token
   const newAccessToken = signJwt({
     payload: {
-      userId: user.id,
+      userId: user.userId,
       username: user.username,
     },
     expiresInSeconds: config.jwt.accessTokenTTLSeconds,

@@ -3,43 +3,43 @@ import {
   NotFoundError as SlonikNotFoundError,
   sql,
 } from "slonik";
-import { generateHash } from "../../../helpers/generateHash";
-import { User, UserSchema } from "../../../types/schemas";
-import { config } from "../../../config";
-import { logger } from "../../../logging";
-import { InternalServerError } from "../../../errors/server";
-import { NotFoundError, UnauthorizedError } from "../../../errors/client";
+import { generateHash } from "../../../../helpers/generateHash";
+import { config } from "../../../../config";
+import { logger } from "../../../../logging";
+import { InternalServerError } from "../../../../errors/server";
+import { NotFoundError, UnauthorizedError } from "../../../../errors/client";
+import { AccountSchema, Account } from "../../../../types/account";
 
 interface LoginUserOptions {
-  username: string;
+  email: string;
   password: string;
 }
 
-export const loginUser = async (
+export const loginAccount = async (
   database: CommonQueryMethods,
-  { username, password }: LoginUserOptions,
-): Promise<User> => {
+  { email, password }: LoginUserOptions,
+): Promise<Account> => {
   const user = await database
     .one(
-      sql.type(UserSchema)`
+      sql.type(AccountSchema)`
       SELECT
         *
       FROM
-        users
+        account
       WHERE
-        username = ${username};
+        email = ${email};
     `,
     )
     .catch((error) => {
       if (error instanceof SlonikNotFoundError) {
-        logger.info({ username }, "No user found with that username");
+        logger.info({ email }, "No user found with that email");
         throw new NotFoundError({
           code: "user-not-found",
-          message: "No user with the provided username was found",
+          message: "No user with the provided email was found",
         });
       }
 
-      logger.error({ username, error }, "Error while logging user in");
+      logger.error({ email, error }, "Error while logging user in");
       throw new InternalServerError({
         code: "error-getting-user-with-credentials",
         message:
@@ -49,13 +49,13 @@ export const loginUser = async (
 
   const hashedPassword = generateHash({
     password,
-    userSalt: user.salt,
+    userSalt: user.passwordSalt,
     salt: config.tokens.passwordSalt,
   });
 
   if (hashedPassword !== user.password) {
     logger.info(
-      { username },
+      { email },
       "The provided password didn't match hashed password in database",
     );
     throw new UnauthorizedError({

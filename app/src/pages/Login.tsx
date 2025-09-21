@@ -7,27 +7,38 @@ import {
   CardHeader,
   CardTitle,
 } from "@shadcn-ui/components/ui/card";
-import { Input } from "@shadcn-ui/components/ui/input";
-import { Label } from "@shadcn-ui/components/ui/label";
 import { Link } from "react-router-dom";
-import { useState } from "react";
-import { toast } from "sonner";
 import { useAuth } from "../providers/auth";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+} from "@shadcn-ui/components/ui/form";
+import { AccountSchema } from "../types/account";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import type z from "zod";
+import { Input } from "@shadcn-ui/components/ui/input";
 
 export const LoginPage = () => {
   const auth = useAuth();
 
-  const [username, setUsername] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
+  const formSchema = AccountSchema.pick({ email: true, password: true });
 
-  const login = () => {
-    if (!username || !password) {
-      toast("Empty fields! Please fill out all the fields.");
-      return;
-    }
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
 
+  const login = (values: z.infer<typeof formSchema>) => {
+    const { email, password } = values;
     auth.login({
-      username,
+      email,
       password,
     });
   };
@@ -38,37 +49,48 @@ export const LoginPage = () => {
         <CardHeader>
           <CardTitle className="text-2xl">Login</CardTitle>
           <CardDescription>
-            Enter your username and password below to login to your account.
+            Enter your email and password below to login to your account.
           </CardDescription>
         </CardHeader>
         <CardContent className="grid gap-4">
-          <div className="grid gap-2">
-            <Label htmlFor="username">Username</Label>
-            <Input
-              id="username"
-              type="text"
-              placeholder="johndoe"
-              value={username}
-              onChange={(e) => setUsername(e.currentTarget.value)}
-              required
-            />
-          </div>
-          <div className="grid gap-2">
-            <Label htmlFor="password">Password</Label>
-            <Input
-              id="password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.currentTarget.value)}
-              required
-            />
-          </div>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(login)} className="grid gap-4">
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email</FormLabel>
+                    <FormControl>
+                      <Input placeholder="johndoe@mail.com" {...field} />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Password</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="***********"
+                        type="password"
+                        {...field}
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+              <Button className="w-full cursor-pointer" type="submit">
+                Sign in
+              </Button>
+            </form>
+          </Form>
         </CardContent>
         <CardFooter className="flex flex-col">
-          <Button className="w-full" onClick={() => login()}>
-            Sign in
-          </Button>
-          <div className="mt-4 text-center text-sm">
+          <div className="text-center text-sm">
             Doesn't have an account?{" "}
             <Link to={"/signup"} className="underline">
               Sign up

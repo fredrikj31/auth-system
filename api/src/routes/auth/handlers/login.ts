@@ -1,17 +1,21 @@
 import { CommonQueryMethods } from "slonik";
-import { loginUser } from "../../../services/database/queries/loginUser";
+import { loginAccount } from "../../../services/database/queries/account/loginAccount";
 import { signJwt } from "../../../helpers/signJwt";
 import { randomUUID } from "crypto";
-import { createRefreshToken } from "../../../services/database/queries/createRefreshToken";
+import { createRefreshToken } from "../../../services/database/queries/refreshToken/createRefreshToken";
 import { config } from "../../../config";
+import { DateTime } from "luxon";
 
-interface LoginUserHandlerOptions {
+interface LoginHandlerOptions {
   database: CommonQueryMethods;
-  username: string;
+  email: string;
   password: string;
 }
-
-interface LoginUserHandlerOutput {
+export const loginHandler = async ({
+  database,
+  email,
+  password,
+}: LoginHandlerOptions): Promise<{
   accessToken: {
     token: string;
     expiresAt: string;
@@ -20,32 +24,28 @@ interface LoginUserHandlerOutput {
     token: string;
     expiresAt: string;
   };
-}
-
-export const loginUserHandler = async ({
-  database,
-  username,
-  password,
-}: LoginUserHandlerOptions): Promise<LoginUserHandlerOutput> => {
-  const user = await loginUser(database, {
-    username,
+}> => {
+  const user = await loginAccount(database, {
+    email,
     password,
   });
 
-  const accessTokenExpiresAt = new Date(
-    new Date().getTime() + config.jwt.accessTokenTTLSeconds * 1000,
-  ).toISOString();
+  const accessTokenExpiresAt = DateTime.now()
+    .toUTC()
+    .plus({ seconds: config.jwt.accessTokenTTLSeconds * 1000 })
+    .toISO();
   const accessToken = signJwt({
     payload: {
-      userId: user.id,
-      username: user.username,
+      userId: user.userId,
+      email: user.email,
     },
     expiresInSeconds: config.jwt.accessTokenTTLSeconds,
   });
 
-  const refreshTokenExpiresAt = new Date(
-    Date.now() + config.jwt.refreshTokenTTLSeconds * 1000,
-  ).toISOString();
+  const refreshTokenExpiresAt = DateTime.now()
+    .toUTC()
+    .plus({ seconds: config.jwt.refreshTokenTTLSeconds * 1000 })
+    .toISO();
   const refreshTokenId = randomUUID();
   const refreshToken = signJwt({
     payload: {},
@@ -55,10 +55,11 @@ export const loginUserHandler = async ({
 
   await createRefreshToken(database, {
     tokenId: refreshTokenId,
-    userId: user.id,
-    expiresAt: new Date(
-      Date.now() + config.jwt.refreshTokenTTLSeconds * 1000,
-    ).toISOString(),
+    userId: user.userId,
+    expiresAt: DateTime.now()
+      .toUTC()
+      .plus({ seconds: config.jwt.refreshTokenTTLSeconds * 1000 })
+      .toISO(),
   });
 
   return {

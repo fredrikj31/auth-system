@@ -1,11 +1,11 @@
 import { FastifyPluginAsync } from "fastify";
 import { ZodTypeProvider } from "fastify-type-provider-zod";
-import { UserSchema } from "../../types/schemas";
 import { UnauthorizedError } from "../../errors/client";
-import { getUserById } from "../../services/database/queries/getUserById";
 import { validateJwt } from "../../hooks/validateJwt";
+import { ProfileSchema } from "../../types/profile";
+import { getProfileById } from "../../services/database/queries/profile/getProfileById";
 
-export const usersRoutes: FastifyPluginAsync = async (instance) => {
+export const profilesRoutes: FastifyPluginAsync = async (instance) => {
   const app = instance.withTypeProvider<ZodTypeProvider>();
   const database = instance.database;
 
@@ -14,17 +14,21 @@ export const usersRoutes: FastifyPluginAsync = async (instance) => {
     {
       onRequest: [validateJwt],
       schema: {
-        summary: "Get details about user",
+        summary: "Get details about profile",
         description:
-          "Gets detailed information about the user requesting the route.",
-        tags: ["users"],
+          "Gets detailed information about the profile requesting the route.",
+        tags: ["profiles"],
         security: [
           {
             jwt: [""],
           },
         ],
         response: {
-          "200": UserSchema.omit({ password: true, salt: true }),
+          "200": ProfileSchema.omit({
+            createdAt: true,
+            updatedAt: true,
+            deletedAt: true,
+          }),
         },
       },
     },
@@ -38,7 +42,7 @@ export const usersRoutes: FastifyPluginAsync = async (instance) => {
         });
       }
 
-      const user = await getUserById(database, { userId });
+      const user = await getProfileById(database, { userId });
       return res.status(200).send(user);
     },
   );

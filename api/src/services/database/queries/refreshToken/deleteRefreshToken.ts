@@ -3,10 +3,10 @@ import {
   sql,
   NotFoundError as SlonikNotFoundError,
 } from "slonik";
-import { RefreshTokenSchema } from "../../../types/schemas";
-import { NotFoundError } from "../../../errors/client";
-import { logger } from "../../../logging";
-import { InternalServerError } from "../../../errors/server";
+import { NotFoundError } from "../../../../errors/client";
+import { logger } from "../../../../logging";
+import { InternalServerError } from "../../../../errors/server";
+import { RefreshTokenSchema } from "../../../../types/refreshToken";
 
 interface DeleteRefreshTokenOptions {
   refreshTokenId: string;
@@ -19,7 +19,7 @@ export const deleteRefreshToken = async (
   try {
     await database.any(sql.type(RefreshTokenSchema)`
       DELETE FROM
-        refresh_tokens
+        refresh_token
       WHERE
         id = ${refreshTokenId};
     `);

@@ -1,4 +1,3 @@
-import { Label } from "@radix-ui/react-label";
 import { Button } from "@shadcn-ui/components/ui/button";
 import {
   Card,
@@ -14,33 +13,77 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@shadcn-ui/components/ui/popover";
-import { cn } from "@shadcn-ui/lib/utils";
 import { CalendarIcon } from "lucide-react";
 import { Calendar } from "@shadcn-ui/components/ui/calendar";
-import { useState } from "react";
 import { format } from "date-fns";
-import { toast } from "sonner";
 import { useAuth } from "../providers/auth";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@shadcn-ui/components/ui/select";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+} from "@shadcn-ui/components/ui/form";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { DateTime } from "luxon";
+import z from "zod";
+import { AccountSchema } from "../types/account";
+import { ProfileSchema } from "../types/profile";
 
 export const SignupPage = () => {
   const auth = useAuth();
 
-  const [email, setEmail] = useState<string>("");
-  const [username, setUsername] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  const [birthDate, setBirthDate] = useState<Date>();
+  const formSchema = z.object({
+    ...AccountSchema.pick({ email: true, password: true }).shape,
+    ...ProfileSchema.omit({
+      userId: true,
+      birthDate: true,
+      createdAt: true,
+      updatedAt: true,
+      deletedAt: true,
+    }).shape,
+    birthDate: z.date(),
+  });
 
-  const signup = () => {
-    if (!email || !username || !password || !birthDate) {
-      toast("Fields Empty! Please fill out all the input fields");
-      return;
-    }
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      email: "",
+      username: "",
+      password: "",
+      firstName: "",
+      lastName: "",
+      birthDate: new Date(),
+      gender: undefined,
+    },
+  });
 
+  const signup = (values: z.infer<typeof formSchema>) => {
+    const {
+      email,
+      password,
+      username,
+      firstName,
+      lastName,
+      birthDate,
+      gender,
+    } = values;
     auth.signup({
       email,
-      username,
       password,
-      birthDate: format(birthDate, "yyyy-MM-dd"),
+      username,
+      firstName,
+      lastName,
+      birthDate: DateTime.fromJSDate(birthDate).toFormat("yyyy-LL-dd"),
+      gender,
     });
   };
 
@@ -54,69 +97,145 @@ export const SignupPage = () => {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid gap-4">
-            <div className="grid gap-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="johndoe@mail.com"
-                required
-                onChange={(e) => setEmail(e.currentTarget.value)}
-              />
-            </div>
-            <div className="flex flex-row gap-2">
-              <div className="grid gap-2 min-w-52 w-full">
-                <Label htmlFor="username">Username</Label>
-                <Input
-                  id="username"
-                  type="text"
-                  placeholder="JohnDoe"
-                  required
-                  onChange={(e) => setUsername(e.currentTarget.value)}
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(signup)} className="grid gap-4">
+              <div className="grid grid-cols-2 gap-2 w-full">
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Email</FormLabel>
+                      <FormControl>
+                        <Input placeholder="johndoe@mail.com" {...field} />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="username"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Username</FormLabel>
+                      <FormControl>
+                        <Input placeholder="JohnDoe" {...field} />
+                      </FormControl>
+                    </FormItem>
+                  )}
                 />
               </div>
-              <div className="grid gap-2 min-w-52 w-full">
-                <Label>Birth Date</Label>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant={"outline"}
-                      className={cn(
-                        "justify-start text-left font-normal",
-                        !birthDate && "text-muted-foreground",
-                      )}
-                    >
-                      <CalendarIcon className="mr-2 h-4 w-4" />
-                      {birthDate ? (
-                        format(birthDate, "PPP")
-                      ) : (
-                        <span>Pick a date</span>
-                      )}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0">
-                    <Calendar
-                      mode="single"
-                      selected={birthDate}
-                      onSelect={setBirthDate}
-                    />
-                  </PopoverContent>
-                </Popover>
+              <div className="grid grid-cols-2 gap-2 w-full">
+                <FormField
+                  control={form.control}
+                  name="firstName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>First Name</FormLabel>
+                      <FormControl>
+                        <Input placeholder="John" {...field} />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="lastName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Last Name</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Doe" {...field} />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
               </div>
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="password">Password</Label>
-              <Input
-                id="password"
-                type="password"
-                onChange={(e) => setPassword(e.currentTarget.value)}
-              />
-            </div>
-            <Button type="submit" className="w-full" onClick={signup}>
-              Create an account
-            </Button>
-          </div>
+              <div className="grid grid-cols-2 gap-2 w-full">
+                <FormField
+                  control={form.control}
+                  name="birthDate"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Birth Date</FormLabel>
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <FormControl>
+                            <Button variant={"outline"} className="w-full">
+                              {field.value ? (
+                                format(field.value, "PPP")
+                              ) : (
+                                <span>Pick a date</span>
+                              )}
+                              <CalendarIcon />
+                            </Button>
+                          </FormControl>
+                        </PopoverTrigger>
+                        <PopoverContent>
+                          <Calendar
+                            mode="single"
+                            selected={new Date(field.value)}
+                            onSelect={field.onChange}
+                            disabled={(date) =>
+                              date > new Date() || date < new Date("1900-01-01")
+                            }
+                            captionLayout="dropdown"
+                          />
+                        </PopoverContent>
+                      </Popover>
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="gender"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Gender</FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger className="w-full">
+                            <SelectValue placeholder="Select your gender" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="MALE">Male</SelectItem>
+                          <SelectItem value="FEMALE">Female</SelectItem>
+                          <SelectItem value="PREFER_NOT_TO_SAY">
+                            Prefer Not To Say
+                          </SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <div className="grid gap-2">
+                <FormField
+                  control={form.control}
+                  name="password"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Password</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="password"
+                          placeholder="************"
+                          {...field}
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <Button type="submit" className="w-full cursor-pointer">
+                Create an account
+              </Button>
+            </form>
+          </Form>
           <div className="mt-4 text-center text-sm">
             Already have an account?{" "}
             <Link to={"/login"} className="underline">
