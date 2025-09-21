@@ -1,17 +1,16 @@
 import { CommonQueryMethods } from "slonik";
 import { validateJwtToken } from "../../../helpers/validateJwtToken";
 import { BadRequestError } from "../../../errors/client";
-import { deleteRefreshToken } from "../../../services/database/queries/deleteRefreshToken";
+import { deleteRefreshToken } from "../../../services/database/queries/refreshToken/deleteRefreshToken";
 
-interface LogoutUserHandlerOptions {
+interface LogoutHandlerOptions {
   database: CommonQueryMethods;
   refreshToken: string;
 }
-
-export const logoutUserHandler = async ({
+export const logoutHandler = async ({
   database,
   refreshToken,
-}: LogoutUserHandlerOptions): Promise<void> => {
+}: LogoutHandlerOptions): Promise<void> => {
   const refreshTokenPayload = await validateJwtToken({ token: refreshToken });
 
   if (!refreshTokenPayload.jti) {

@@ -3,10 +3,13 @@ import {
   ForeignKeyIntegrityConstraintViolationError,
   sql,
 } from "slonik";
-import { RefreshToken, RefreshTokenSchema } from "../../../types/schemas";
-import { logger } from "../../../logging";
-import { InternalServerError } from "../../../errors/server";
-import { BadRequestError } from "../../../errors/client";
+import { logger } from "../../../../logging";
+import { InternalServerError } from "../../../../errors/server";
+import { BadRequestError } from "../../../../errors/client";
+import {
+  RefreshToken,
+  RefreshTokenSchema,
+} from "../../../../types/refreshToken";
 
 interface CreateRefreshTokenOptions {
   tokenId: string;
@@ -21,7 +24,7 @@ export const createRefreshToken = async (
   try {
     return await database.one(sql.type(RefreshTokenSchema)`
       INSERT INTO 
-        refresh_tokens (
+        refresh_token (
           id, 
           user_id,
           expires_at

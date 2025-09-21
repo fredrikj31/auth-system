@@ -33,6 +33,7 @@ CREATE TABLE IF NOT EXISTS profile (
   deleted_at timestamp
 );
 
+ALTER TABLE ONLY profile ADD CONSTRAINT profile_user_id_primary_key PRIMARY KEY (user_id);
 ALTER TABLE ONLY profile ADD CONSTRAINT profile_username_unique_key UNIQUE (username);
 ALTER TABLE ONLY profile ADD CONSTRAINT profile_user_id_references FOREIGN KEY(user_id) REFERENCES account(user_id);
 ---

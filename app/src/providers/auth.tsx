@@ -7,6 +7,8 @@ import { useLoginUser } from "../api/loginUser/useLoginUser";
 import { useSignupUser } from "../api/signupUser/useSignupUser";
 import { useLogoutUser } from "../api/logoutUser/useLogoutUser";
 import { refreshToken } from "../api/refreshToken";
+import type { signupUser } from "../api/signupUser";
+import type { loginUser } from "../api/loginUser";
 
 type AuthProviderProps = {
   children: React.ReactNode;
@@ -16,13 +18,8 @@ type AuthProviderValue = {
   isAuthenticated: boolean;
   userId: string | undefined;
   // Methods
-  login: (data: { username: string; password: string }) => void;
-  signup: (data: {
-    email: string;
-    username: string;
-    password: string;
-    birthDate: string;
-  }) => void;
+  login: (data: Parameters<typeof loginUser>[0]) => void;
+  signup: (data: Parameters<typeof signupUser>[0]) => void;
   logout: () => void;
 };
 
@@ -62,7 +59,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   }, [navigate, accessToken, refreshTokenCookie]);
 
-  const login = (data: { username: string; password: string }) => {
+  const login = (data: Parameters<typeof loginUser>[0]) => {
     loginUser(data, {
       onError: (error) => {
         console.error("Error logging in!", error);
@@ -89,12 +86,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     });
   };
 
-  const signup = (data: {
-    email: string;
-    username: string;
-    password: string;
-    birthDate: string;
-  }) => {
+  const signup = (data: Parameters<typeof signupUser>[0]) => {
     signupUser(data, {
       onError: (error) => {
         console.error("Error signing up!", error);

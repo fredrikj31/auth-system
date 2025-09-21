@@ -1,19 +1,15 @@
 import { AxiosError } from "axios";
 import { apiClient } from "../client";
 import { ApiError } from "../errors";
-
-export interface LoginUserOptions {
-  username: string;
-  password: string;
-}
+import type { Account } from "../../types/account";
 
 export const loginUser = async ({
-  username,
+  email,
   password,
-}: LoginUserOptions): Promise<void> => {
+}: Pick<Account, "email" | "password">): Promise<void> => {
   try {
     await apiClient.post("/login", {
-      username,
+      email,
       password,
     });
   } catch (error) {

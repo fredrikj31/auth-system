@@ -3,10 +3,13 @@ import {
   sql,
   NotFoundError as SlonikNotFoundError,
 } from "slonik";
-import { RefreshToken, RefreshTokenSchema } from "../../../types/schemas";
-import { logger } from "../../../logging";
-import { InternalServerError } from "../../../errors/server";
-import { NotFoundError } from "../../../errors/client";
+import { logger } from "../../../../logging";
+import { InternalServerError } from "../../../../errors/server";
+import { NotFoundError } from "../../../../errors/client";
+import {
+  RefreshToken,
+  RefreshTokenSchema,
+} from "../../../../types/refreshToken";
 
 interface CheckRefreshTokenOptions {
   refreshTokenId: string;
@@ -21,7 +24,7 @@ export const checkRefreshToken = async (
       SELECT
         *
       FROM
-        refresh_tokens
+        refresh_token
       WHERE
         id = ${refreshTokenId};
     `);

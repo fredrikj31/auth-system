@@ -8,12 +8,12 @@ import {
   CardTitle,
 } from "@shadcn-ui/components/ui/card";
 import { Skeleton } from "@shadcn-ui/components/ui/skeleton";
-import { useGetUser } from "../api/getUser/useGetUser";
+import { useGetProfile } from "../api/getProfile/useGetProfile";
 import { useAuth } from "../providers/auth";
 
 export const HomePage = () => {
   const auth = useAuth();
-  const { data, isFetching, isError } = useGetUser();
+  const { data, isFetching, isError } = useGetProfile();
 
   const logout = () => {
     auth.logout();
@@ -72,23 +72,31 @@ export const HomePage = () => {
         <CardContent className="flex flex-col gap-2">
           <div className="flex flex-row justify-between">
             <span className="text-zinc-500 font-semibold">Id:</span>
-            <span className="text-zinc-700">{data.id}</span>
-          </div>
-          <div className="flex flex-row justify-between">
-            <span className="text-zinc-500 font-semibold">Email:</span>
-            <span className="text-zinc-700">{data.email}</span>
+            <span className="text-zinc-700">{data.userId}</span>
           </div>
           <div className="flex flex-row justify-between">
             <span className="text-zinc-500 font-semibold">Username:</span>
             <span className="text-zinc-700">{data.username}</span>
           </div>
           <div className="flex flex-row justify-between">
+            <span className="text-zinc-500 font-semibold">First Name:</span>
+            <span className="text-zinc-700">{data.firstName}</span>
+          </div>
+          <div className="flex flex-row justify-between">
+            <span className="text-zinc-500 font-semibold">Last Name:</span>
+            <span className="text-zinc-700">{data.lastName}</span>
+          </div>
+          <div className="flex flex-row justify-between">
             <span className="text-zinc-500 font-semibold">Birthday:</span>
             <span className="text-zinc-700">{data.birthDate}</span>
           </div>
+          <div className="flex flex-row justify-between">
+            <span className="text-zinc-500 font-semibold">Gender:</span>
+            <span className="text-zinc-700">{data.gender}</span>
+          </div>
         </CardContent>
         <CardFooter>
-          <Button className="w-full" onClick={logout}>
+          <Button className="w-full cursor-pointer" onClick={logout}>
             Logout
           </Button>
         </CardFooter>
