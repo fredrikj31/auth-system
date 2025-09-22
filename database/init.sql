@@ -50,3 +50,20 @@ ALTER TABLE ONLY refresh_token ADD CONSTRAINT refresh_token_id_primary_key PRIMA
 ALTER TABLE ONLY refresh_token ADD CONSTRAINT refresh_token_id_unique_key UNIQUE (id);
 ALTER TABLE ONLY refresh_token ADD CONSTRAINT refresh_token_user_id_references FOREIGN KEY(user_id) REFERENCES account(user_id);
 ---
+
+--- recovery_code table
+CREATE TABLE IF NOT EXISTS recovery_code (
+  id uuid NOT NULL,
+  user_id uuid NOT NULL,
+  code varchar(255) NOT NULL,
+  is_used boolean NOT NULL,
+  used_at timestamp,
+  created_at timestamp NOT NULL,
+  updated_at timestamp,
+  deleted_at timestamp
+);
+
+ALTER TABLE ONLY recovery_code ADD CONSTRAINT recovery_code_id_primary_key PRIMARY KEY (id);
+ALTER TABLE ONLY recovery_code ADD CONSTRAINT recovery_code_id_unique_key UNIQUE (id);
+ALTER TABLE ONLY recovery_code ADD CONSTRAINT recovery_code_user_id_references FOREIGN KEY(user_id) REFERENCES account(user_id);
+---
