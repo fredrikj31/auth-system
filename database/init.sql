@@ -11,6 +11,7 @@ CREATE TABLE IF NOT EXISTS account (
   email varchar(255) NOT NULL,
   password varchar(255) NOT NULL,
   password_salt varchar(255) NOT NULL,
+  is_two_factor_authentication_enabled boolean,
   created_at timestamp NOT NULL,
   updated_at timestamp,
   deleted_at timestamp
