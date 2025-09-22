@@ -42,6 +42,7 @@ export const authRoutes: FastifyPluginAsync = async (instance) => {
             ...AccountSchema.omit({
               password: true,
               passwordSalt: true,
+              isTwoFactorAuthenticationEnabled: true,
               createdAt: true,
               updatedAt: true,
               deletedAt: true,
