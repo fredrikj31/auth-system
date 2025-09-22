@@ -23,6 +23,9 @@ export const createAccount = async (
           email, 
           password,
           password_salt,
+          is_two_factor_authentication_enabled,
+          two_factor_authentication_secret,
+          two_factor_authentication_secret_salt,
           created_at,
           updated_at,
           deleted_at
@@ -33,6 +36,9 @@ export const createAccount = async (
           ${email},
           ${hashedPassword},
           ${passwordSalt},
+          ${false},
+          ${null},
+          ${null},
           ${DateTime.now().toUTC().toISO()},
           ${null},
           ${null}
