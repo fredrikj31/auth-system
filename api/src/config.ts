@@ -9,6 +9,7 @@ const envVarsSchema = z.object({
   JWT_PRIVATE_KEY: z.string(),
   PASSWORD_SALT: z.string(),
   COOKIE_SECRET: z.string(),
+  TWO_FACTOR_AUTHENTICATION_SECRET: z.string(),
   DB_HOST: z.string(),
   DB_PORT: z.string(),
   DB_NAME: z.string(),
@@ -30,6 +31,8 @@ export const config = {
     jwtPrivateKey: envVars.data.JWT_PRIVATE_KEY,
     passwordSalt: envVars.data.PASSWORD_SALT,
     cookieSecret: envVars.data.COOKIE_SECRET,
+    twoFactorAuthenticationSecret:
+      envVars.data.TWO_FACTOR_AUTHENTICATION_SECRET,
   },
   database: {
     host: envVars.data.DB_HOST,
