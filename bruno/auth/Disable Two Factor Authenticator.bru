@@ -1,0 +1,15 @@
+meta {
+  name: Disable Two Factor Authenticator
+  type: http
+  seq: 6
+}
+
+delete {
+  url: http://localhost:3000/api/two-factor-authentication
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{access_token}}
+}
