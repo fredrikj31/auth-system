@@ -1,16 +1,10 @@
 import { createHash } from "crypto";
 
 interface GenerateHashOptions {
-  password: string;
-  userSalt: string;
+  text: string;
   salt: string;
+  secret: string;
 }
-export const generateHash = ({
-  password,
-  userSalt,
-  salt,
-}: GenerateHashOptions) => {
-  return createHash("sha256")
-    .update(`${userSalt}${password}${salt}`)
-    .digest("hex");
+export const generateHash = ({ text, salt, secret }: GenerateHashOptions) => {
+  return createHash("sha256").update(`${secret}${text}${salt}`).digest("hex");
 };

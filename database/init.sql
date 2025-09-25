@@ -12,6 +12,8 @@ CREATE TABLE IF NOT EXISTS account (
   password varchar(255) NOT NULL,
   password_salt varchar(255) NOT NULL,
   is_two_factor_authentication_enabled boolean,
+  two_factor_authentication_secret text,
+  two_factor_authentication_secret_salt varchar(255),
   created_at timestamp NOT NULL,
   updated_at timestamp,
   deleted_at timestamp
@@ -56,6 +58,7 @@ CREATE TABLE IF NOT EXISTS recovery_code (
   id uuid NOT NULL,
   user_id uuid NOT NULL,
   code varchar(255) NOT NULL,
+  code_salt varchar(255) NOT NULL,
   is_used boolean NOT NULL,
   used_at timestamp,
   created_at timestamp NOT NULL,

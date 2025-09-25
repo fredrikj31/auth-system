@@ -52,9 +52,9 @@ export const signupHandler = async ({
   const userId = randomUUID();
   const userSalt = randomBytes(20).toString("hex");
   const hashedPassword = generateHash({
-    password: user.password,
-    userSalt,
-    salt: config.tokens.passwordSalt,
+    text: user.password,
+    salt: userSalt,
+    secret: config.tokens.passwordSalt,
   });
 
   const { email } = await createAccount(database, {

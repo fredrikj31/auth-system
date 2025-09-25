@@ -1,0 +1,21 @@
+meta {
+  name: Enable Two Factor Authenticator
+  type: http
+  seq: 5
+}
+
+post {
+  url: http://localhost:3000/api/two-factor-authentication
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{access_token}}
+}
+
+body:json {
+  {
+    "label": "Auth System"
+  }
+}

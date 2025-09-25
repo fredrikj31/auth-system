@@ -6,9 +6,12 @@ import { z } from "zod";
 import { loginHandler } from "./handlers/login";
 import { signupHandler } from "./handlers/signup";
 import { refreshTokenHandler } from "./handlers/refreshToken";
-import { NotFoundError } from "../../errors/client";
+import { NotFoundError, UnauthorizedError } from "../../errors/client";
 import { logoutHandler } from "./handlers/logout";
 import { DateTime } from "luxon";
+import { enableTwoFactorAuthenticationHandler } from "./handlers/enableTwoFactorAuthentication";
+import { disableTwoFactorAuthenticationHandler } from "./handlers/disableTwoFactorAuthentication";
+import { validateJwt } from "../../hooks/validateJwt";
 
 export const authRoutes: FastifyPluginAsync = async (instance) => {
   const app = instance.withTypeProvider<ZodTypeProvider>();
@@ -26,6 +29,9 @@ export const authRoutes: FastifyPluginAsync = async (instance) => {
           ...AccountSchema.omit({
             userId: true,
             passwordSalt: true,
+            isTwoFactorAuthenticationEnabled: true,
+            twoFactorAuthenticationSecret: true,
+            twoFactorAuthenticationSecretSalt: true,
             createdAt: true,
             updatedAt: true,
             deletedAt: true,
@@ -42,6 +48,9 @@ export const authRoutes: FastifyPluginAsync = async (instance) => {
             ...AccountSchema.omit({
               password: true,
               passwordSalt: true,
+              isTwoFactorAuthenticationEnabled: true,
+              twoFactorAuthenticationSecret: true,
+              twoFactorAuthenticationSecretSalt: true,
               createdAt: true,
               updatedAt: true,
               deletedAt: true,
@@ -172,6 +181,85 @@ export const authRoutes: FastifyPluginAsync = async (instance) => {
       res.setCookie("access_token", token, {
         expires: DateTime.fromISO(expiresAt).toUTC().toJSDate(),
       });
+      return res.status(200).send({
+        ok: true,
+      });
+    },
+  );
+
+  app.post(
+    "/two-factor-authentication",
+    {
+      onRequest: [validateJwt],
+      schema: {
+        summary: "Enable two factor authentication",
+        descriptions:
+          "Sets up and enables two factor authentication for account.",
+        tags: ["actions"],
+        body: z.object({
+          label: z.string(),
+        }),
+        response: {
+          "200": z.object({
+            authenticatorString: z.string(),
+          }),
+        },
+      },
+    },
+    async (req, res) => {
+      const userId = req.user?.id;
+      if (!userId) {
+        throw new UnauthorizedError({
+          code: "user-id-not-found-in-request",
+          message: "A user id wasn't found in the request object",
+        });
+      }
+
+      const { label } = req.body;
+
+      const { authenticatorString } =
+        await enableTwoFactorAuthenticationHandler({
+          database,
+          userId,
+          label,
+        });
+
+      return res.status(200).send({
+        authenticatorString,
+      });
+    },
+  );
+
+  app.delete(
+    "/two-factor-authentication",
+    {
+      onRequest: [validateJwt],
+      schema: {
+        summary: "Disable two factor authentication",
+        descriptions:
+          "Removes and disables two factor authentication for account.",
+        tags: ["actions"],
+        response: {
+          "200": z.object({
+            ok: z.boolean(),
+          }),
+        },
+      },
+    },
+    async (req, res) => {
+      const userId = req.user?.id;
+      if (!userId) {
+        throw new UnauthorizedError({
+          code: "user-id-not-found-in-request",
+          message: "A user id wasn't found in the request object",
+        });
+      }
+
+      await disableTwoFactorAuthenticationHandler({
+        database,
+        userId,
+      });
+
       return res.status(200).send({
         ok: true,
       });

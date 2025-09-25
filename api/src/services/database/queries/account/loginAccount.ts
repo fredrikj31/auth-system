@@ -48,9 +48,9 @@ export const loginAccount = async (
     });
 
   const hashedPassword = generateHash({
-    password,
-    userSalt: user.passwordSalt,
-    salt: config.tokens.passwordSalt,
+    text: password,
+    secret: config.tokens.passwordSalt,
+    salt: user.passwordSalt,
   });
 
   if (hashedPassword !== user.password) {
