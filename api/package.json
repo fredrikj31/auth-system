@@ -20,6 +20,7 @@
     "fastify-type-provider-zod": "^6.0.0",
     "jsonwebtoken": "^9.0.2",
     "luxon": "^3.7.2",
+    "otpauth": "^9.4.1",
     "pino": "^9.11.0",
     "slonik": "^48.6.0",
     "slonik-interceptor-field-name-transformation": "^48.6.0",
