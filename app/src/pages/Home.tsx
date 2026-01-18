@@ -45,7 +45,7 @@ export const HomePage = () => {
       <div className="min-h-screen flex justify-center items-center">
         <Card className="w-full max-w-md">
           <CardHeader>
-            <CardTitle className="text-2xl">Profile not found</CardTitle>
+            <CardTitle className="text-2xl">Profile not found.</CardTitle>
           </CardHeader>
           <CardContent>
             Your profile information was not found. Please contact an admin.
