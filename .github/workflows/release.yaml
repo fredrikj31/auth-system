@@ -110,3 +110,14 @@ jobs:
           tags: |
             ${{ env.REGISTRY }}/${{ env.USERNAME }}/${{ env.IMAGE_NAME }}:${{needs.release.outputs.new-release-version}}
             ${{ env.REGISTRY }}/${{ env.USERNAME }}/${{ env.IMAGE_NAME }}:latest
+
+  trigger-deployment:
+    needs: [push-frontend-docker-image, push-backend-docker-image]
+    if: needs.release.outputs.new-release-published == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send Webhook to Portainer
+        env:
+          WEBHOOK_URL: ${{ secrets.PORTAINER_WEBHOOK_URL }}
+        run: |
+          curl -X POST "$WEBHOOK_URL"
