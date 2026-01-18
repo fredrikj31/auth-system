@@ -35,7 +35,7 @@ services:
 
   backend:
     container_name: auth-system-backend
-    image: fredrikj31/auth-system-backend:latest
+    image: "ghcr.io/fredrikj31/auth-system-backend:latest"
     restart: always
     profiles:
       - prod
@@ -57,7 +57,7 @@ services:
 
   frontend:
     container_name: auth-system-frontend
-    image: fredrikj31/auth-system-frontend:latest
+    image: "ghcr.io/fredrikj31/auth-system-frontend:latest"
     restart: always
     profiles:
       - prod
