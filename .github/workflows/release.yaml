@@ -9,6 +9,8 @@ permissions:
   pull-requests: write
   pages: write
   id-token: write
+  packages: write
+  attestations: write
 
 env:
   REGISTRY: ghcr.io
