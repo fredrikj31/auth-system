@@ -44,6 +44,7 @@ services:
       JWT_PRIVATE_KEY: ${JWT_PRIVATE_KEY}
       PASSWORD_SALT: ${PASSWORD_SALT}
       COOKIE_SECRET: ${COOKIE_SECRET}
+      TWO_FACTOR_AUTHENTICATION_SECRET: ${TWO_FACTOR_AUTHENTICATION_SECRET}
       DB_HOST: auth-system-database
       DB_PORT: 5432 # Must be set to "5432", because the backend and database shares network
       DB_NAME: auth-system
