@@ -75,6 +75,7 @@ jobs:
           file: ./Dockerfile.backend
           platforms: linux/amd64,linux/arm64
           push: true
+          provenance: false
           tags: |
             ${{ env.REGISTRY }}/${{ env.USERNAME }}/${{ env.IMAGE_NAME }}:${{needs.release.outputs.new-release-version}}
             ${{ env.REGISTRY }}/${{ env.USERNAME }}/${{ env.IMAGE_NAME }}:latest
@@ -107,6 +108,7 @@ jobs:
           file: ./Dockerfile.backend
           platforms: linux/amd64,linux/arm64
           push: true
+          provenance: false
           tags: |
             ${{ env.REGISTRY }}/${{ env.USERNAME }}/${{ env.IMAGE_NAME }}:${{needs.release.outputs.new-release-version}}
             ${{ env.REGISTRY }}/${{ env.USERNAME }}/${{ env.IMAGE_NAME }}:latest
