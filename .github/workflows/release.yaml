@@ -76,6 +76,7 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           provenance: false
+          sbom: false
           tags: |
             ${{ env.REGISTRY }}/${{ env.USERNAME }}/${{ env.IMAGE_NAME }}:${{needs.release.outputs.new-release-version}}
             ${{ env.REGISTRY }}/${{ env.USERNAME }}/${{ env.IMAGE_NAME }}:latest
@@ -109,6 +110,7 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           provenance: false
+          sbom: false
           tags: |
             ${{ env.REGISTRY }}/${{ env.USERNAME }}/${{ env.IMAGE_NAME }}:${{needs.release.outputs.new-release-version}}
             ${{ env.REGISTRY }}/${{ env.USERNAME }}/${{ env.IMAGE_NAME }}:latest
