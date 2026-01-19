@@ -121,3 +121,27 @@ jobs:
           WEBHOOK_URL: ${{ secrets.PORTAINER_WEBHOOK_URL }}
         run: |
           curl -X POST "$WEBHOOK_URL"
+
+  packages-frontend-image-cleanup:
+    needs: [trigger-deployment]
+    if: needs.release.outputs.new-release-published == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Delete old images, retain latest 10
+        uses: actions/delete-package-versions@v5
+        with:
+          package-name: "auth-system-frontend"
+          package-type: "container"
+          min-versions-to-keep: 10
+
+  packages-backend-image-cleanup:
+    needs: [trigger-deployment]
+    if: needs.release.outputs.new-release-published == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Delete old images, retain latest 10
+        uses: actions/delete-package-versions@v5
+        with:
+          package-name: "auth-system-backend"
+          package-type: "container"
+          min-versions-to-keep: 10
