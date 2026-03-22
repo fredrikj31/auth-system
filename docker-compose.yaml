@@ -1,3 +1,9 @@
+x-logging: &default-logging
+  driver: "json-file"
+  options:
+    max-size: "10m"
+    max-file: "3"
+
 services:
   local-database:
     container_name: auth-system-database
@@ -14,6 +20,7 @@ services:
     volumes:
       - ./.docker/database:/var/lib/postgresql/data # locally bound ".docker" folder
       - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql # init database with SQL files from local "database" folder
+    logging: *default-logging
 
   database:
     container_name: auth-system-database
@@ -32,6 +39,7 @@ services:
     volumes:
       - database-data:/var/lib/postgresql/data # store data from postgresql in the volume
       - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql # init database with SQL files from local "database" folder
+    logging: *default-logging
 
   backend:
     container_name: auth-system-backend
@@ -55,6 +63,7 @@ services:
       - cloudflared
     ports:
       - 2001:3000
+    logging: *default-logging
 
   frontend:
     container_name: auth-system-frontend
@@ -68,6 +77,7 @@ services:
       - cloudflared
     ports:
       - 2002:80
+    logging: *default-logging
 
 networks:
   auth-system-network:
