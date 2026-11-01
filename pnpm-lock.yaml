@@ -55,7 +55,7 @@ importers:
         version: 5.0.1
       fastify-type-provider-zod:
         specifier: ^6.0.0
-        version: 6.0.0(@fastify/swagger@9.5.1)(fastify@5.12.5)(openapi-types@12.1.3)(zod@4.1.11)
+        version: 6.0.0(@fastify/swagger@9.5.1)(fastify@5.12.5)(openapi-types@12.1.3)(zod@4.6.6)
       jsonwebtoken:
         specifier: ^9.0.2
         version: 9.0.2
@@ -75,8 +75,8 @@ importers:
         specifier: ^48.6.0
         version: 48.6.0(slonik@48.6.0)
       zod:
-        specifier: ^4.1.11
-        version: 4.1.11
+        specifier: ^4.6.6
+        version: 4.6.6
     devDependencies:
       '@eslint/eslintrc':
         specifier: 3.3.1
@@ -211,8 +211,8 @@ importers:
         specifier: ^1.0.7
         version: 1.0.7(tailwindcss@4.1.13)
       zod:
-        specifier: ^4.1.11
-        version: 4.1.11
+        specifier: ^4.6.6
+        version: 4.6.6
     devDependencies:
       '@eslint/compat':
         specifier: ^1.3.2
@@ -4167,8 +4167,8 @@ packages:
   zod@3.25.76:
     resolution: {integrity: sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ==}
 
-  zod@4.1.11:
-    resolution: {integrity: sha512-WPsqwxITS2tzx1bzhIKsEs19ABD5vmCVa4xBo2tq/SrV4RNZtfws1EnCWQXM6yh8bD08a1idvkB5MZSBiZsjwg==}
+  zod@4.6.6:
+    resolution: {integrity: sha512-4UmzQUF5fxvfcYHlbjBmejU+w+hbDnWFx4aS8kBx7nPBHcO2SqPbpAG8snbdg+Xse4pRefR98hgjFgIMCI/UhA==}
 
 snapshots:
 
@@ -6184,13 +6184,13 @@ snapshots:
 
   fastify-plugin@5.0.1: {}
 
-  fastify-type-provider-zod@6.0.0(@fastify/swagger@9.5.1)(fastify@5.12.5)(openapi-types@12.1.3)(zod@4.1.11):
+  fastify-type-provider-zod@6.0.0(@fastify/swagger@9.5.1)(fastify@5.12.5)(openapi-types@12.1.3)(zod@4.6.6):
     dependencies:
       '@fastify/error': 4.2.0
       '@fastify/swagger': 9.5.1
       fastify: 5.12.5
       openapi-types: 12.1.3
-      zod: 4.1.11
+      zod: 4.6.6
 
   fastify@5.12.5:
     dependencies:
@@ -7864,4 +7864,4 @@ snapshots:
 
   zod@3.25.76: {}
 
-  zod@4.1.11: {}
+  zod@4.6.6: {}
